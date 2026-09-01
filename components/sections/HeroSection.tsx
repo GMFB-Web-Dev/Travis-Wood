@@ -26,7 +26,7 @@ export function HeroSection() {
             we deliver quality residential building across Whangārei.
           </p>
           <div className="mt-10 flex flex-wrap gap-4">
-            <LinkButton href="#contact">Contact Us</LinkButton>
+            <LinkButton href="/contact">Contact Us</LinkButton>
             <LinkButton href="#services">Services</LinkButton>
           </div>
         </div>

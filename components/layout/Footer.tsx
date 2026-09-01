@@ -4,10 +4,10 @@ import { BrandLogo } from "@/components/ui/BrandLogo";
 import { SiteContainer } from "./SiteContainer";
 
 const footerLinks = [
-  { href: "#top", label: "Home" },
-  { href: "#about", label: "About Us" },
-  { href: "#services", label: "Services" },
-  { href: "#contact", label: "Contact Us" },
+  { href: "/", label: "Home" },
+  { href: "/#about", label: "About Us" },
+  { href: "/services", label: "Services" },
+  { href: "/contact", label: "Contact Us" },
 ];
 
 export function Footer() {
@@ -15,7 +15,7 @@ export function Footer() {
     <footer className="bg-brand-navy/65 py-12 lg:pb-12 lg:pt-16">
       <SiteContainer>
         <div className="flex flex-col items-center justify-between gap-8 md:flex-row">
-          <BrandLogo />
+          <BrandLogo variant="footer" />
           <nav aria-label="Footer navigation" className="flex flex-wrap justify-center gap-x-8 gap-y-3">
             {footerLinks.map((link, index) => (
               <Link

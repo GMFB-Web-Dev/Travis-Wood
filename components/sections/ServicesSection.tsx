@@ -8,6 +8,7 @@ type ServiceCardProps = {
   description: string;
   image: string;
   imageAlt: string;
+  href: string;
   layout: "new-builds" | "outdoor" | "renovations";
 };
 
@@ -16,6 +17,7 @@ function ServiceCard({
   description,
   image,
   imageAlt,
+  href,
   layout,
 }: ServiceCardProps) {
   const outerCorners = {
@@ -40,7 +42,7 @@ function ServiceCard({
           {title}
         </h3>
         <p className="text-base font-light leading-6 text-white">{description}</p>
-        <Link href="#contact" className="mt-2 inline-flex items-center gap-2 self-start text-base uppercase text-white hover:text-brand-gold">
+        <Link href={href} className="mt-2 inline-flex items-center gap-2 self-start text-base uppercase text-white hover:text-brand-gold">
           Learn more
           <Image src="/figma/arrow.svg" alt="" width={22} height={22} />
         </Link>
@@ -60,6 +62,7 @@ export function ServicesSection() {
             description="Architectural and residential new builds, delivered with quality workmanship, considered details and a clear focus on lasting quality and finishes."
             image="/figma/service-new-builds.png"
             imageAlt="Architectural new home by Travis Wood Builder"
+            href="/services#new-builds"
             layout="new-builds"
           />
           <ServiceCard
@@ -67,6 +70,7 @@ export function ServicesSection() {
             description="Decks, fences, pergolas and retaining walls built to create practical outdoor spaces that complement your home and make better use of your section."
             image="/figma/service-outdoor-living.png"
             imageAlt="Outdoor living and pool area built in Whangārei"
+            href="/services#outdoor-living"
             layout="outdoor"
           />
           <ServiceCard
@@ -74,6 +78,7 @@ export function ServicesSection() {
             description="Renovations and extensions that improve how your home looks, feels and functions with high-quality workmanship from planning through to completion."
             image="/figma/service-renovations.jpg"
             imageAlt="Residential extension under construction"
+            href="/services#renovations-extensions"
             layout="renovations"
           />
         </div>

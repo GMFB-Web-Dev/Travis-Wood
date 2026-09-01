@@ -6,7 +6,7 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 export function AboutSection() {
   return (
     <>
-      <section id="about" className="bg-black py-20 lg:min-h-[480px] lg:py-16">
+      <section id="about" className="scroll-mt-28 bg-black py-20 lg:min-h-[480px] lg:py-16">
         <SiteContainer className="grid items-start gap-10 lg:grid-cols-[451px_1fr] lg:gap-10 lg:px-[90px]">
           <SectionHeading eyebrow="About Us" title="Built With Purpose" />
           <div className="max-w-[830px] text-base font-light leading-6 text-white">
@@ -23,7 +23,7 @@ export function AboutSection() {
               through to the final finish, the team values quality workmanship, reliable timeframes and
               creating homes that feel considered, individual and built to stand apart across Northland too.
             </p>
-            <LinkButton href="#contact" className="mt-7 px-5">Contact Us</LinkButton>
+            <LinkButton href="/contact" className="mt-7 px-5">Contact Us</LinkButton>
           </div>
         </SiteContainer>
       </section>

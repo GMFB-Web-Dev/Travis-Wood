@@ -2,33 +2,50 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BrandLogo } from "@/components/ui/BrandLogo";
 import { SiteContainer } from "./SiteContainer";
 
 const links = [
-  { href: "#top", label: "Home" },
-  { href: "#about", label: "About Us" },
-  { href: "#services", label: "Services" },
-  { href: "#contact", label: "Contact Us" },
+  { href: "/", label: "Home", page: "home" },
+  { href: "/#about", label: "About Us", page: "about" },
+  { href: "/services", label: "Services", page: "services" },
+  { href: "/contact", label: "Contact Us", page: "contact" },
 ];
 
-export function Navbar() {
+type NavbarProps = {
+  activePage?: "home" | "contact" | "services";
+};
+
+export function Navbar({ activePage = "home" }: NavbarProps) {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const updateNavbar = () => setScrolled(window.scrollY > 24);
+    updateNavbar();
+    window.addEventListener("scroll", updateNavbar, { passive: true });
+    return () => window.removeEventListener("scroll", updateNavbar);
+  }, []);
 
   return (
-    <nav className="absolute inset-x-0 top-0 z-30 h-20" aria-label="Primary navigation">
+    <nav
+      className={`fixed inset-x-0 top-0 z-50 h-20 transition-[background-color,box-shadow,backdrop-filter] duration-300 ${
+        scrolled || open ? "bg-black/90 shadow-lg shadow-black/20 backdrop-blur-md" : "bg-transparent"
+      }`}
+      aria-label="Primary navigation"
+    >
       <SiteContainer className="flex h-full items-center justify-between">
         <BrandLogo />
 
         <div className="hidden items-center gap-8 lg:flex">
           <div className="flex items-center gap-8">
-            {links.map((link, index) => (
+            {links.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 className={`group relative py-2 text-lg uppercase leading-6 transition-colors hover:text-brand-gold ${
-                  index === 0 ? "text-brand-gold" : "font-light text-white"
+                  link.page === activePage ? "text-brand-gold" : "font-light text-white"
                 }`}
               >
                 {link.label}
