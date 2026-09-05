@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { ActionButton } from "@/components/ui/Button";
+import type { ContactFormSettings } from "@/lib/payload/types";
 
 type FieldProps = {
   id: string;
@@ -23,9 +24,16 @@ function Field({ id, label, type = "text", placeholder, surfaceClassName }: Fiel
 type ContactFormProps = {
   surface?: "black" | "navy";
   className?: string;
+  settings: ContactFormSettings;
+  phonePlaceholder: string;
 };
 
-export function ContactForm({ surface = "black", className = "" }: ContactFormProps) {
+export function ContactForm({
+  surface = "black",
+  className = "",
+  settings,
+  phonePlaceholder,
+}: ContactFormProps) {
   const [sent, setSent] = useState(false);
   const surfaceClassName = surface === "navy" ? "bg-brand-navy" : "bg-black";
 
@@ -42,15 +50,15 @@ export function ContactForm({ surface = "black", className = "" }: ContactFormPr
       </div>
       <div className="grid gap-6 sm:grid-cols-2">
         <Field id="email" label="Email" type="email" placeholder="Email" surfaceClassName={surfaceClassName} />
-        <Field id="phone" label="Phone Number" type="tel" placeholder="021 221 9834" surfaceClassName={surfaceClassName} />
+        <Field id="phone" label="Phone Number" type="tel" placeholder={phonePlaceholder} surfaceClassName={surfaceClassName} />
       </div>
       <label htmlFor="service" className="flex flex-col gap-1.5 text-base font-light uppercase leading-6 text-white">
         Select a Service
         <select id="service" name="service" defaultValue="" className={`h-12 rounded-lg border-[0.5px] border-brand-gold px-4 text-base font-light normal-case text-white ${surfaceClassName}`}>
           <option value="" disabled>Select Service..</option>
-          <option>New Builds</option>
-          <option>Outdoor Living</option>
-          <option>Renovations & Extensions</option>
+          {settings.serviceOptions.map((option) => (
+            <option key={option.label}>{option.label}</option>
+          ))}
         </select>
       </label>
       <label htmlFor="message" className="flex flex-col gap-2 text-base font-light uppercase leading-6 text-white">
@@ -59,11 +67,11 @@ export function ContactForm({ surface = "black", className = "" }: ContactFormPr
       </label>
       <label className="flex items-start gap-2 text-base font-light leading-6 text-white sm:text-lg">
         <input type="checkbox" required className="mt-1 size-4 accent-[#f4c752]" />
-        I agree to the terms and conditions
+        {settings.agreementLabel}
       </label>
       <div>
-        <ActionButton type="submit" className="px-[34px]">Submit</ActionButton>
-        {sent && <p role="status" className="mt-3 text-sm text-brand-gold">Thanks. Your project enquiry is ready to be connected to the site&apos;s form service.</p>}
+        <ActionButton type="submit" className="px-[34px]">{settings.submitLabel}</ActionButton>
+        {sent && <p role="status" className="mt-3 text-sm text-brand-gold">{settings.successMessage}</p>}
       </div>
     </form>
   );

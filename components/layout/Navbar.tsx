@@ -4,20 +4,22 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { BrandLogo } from "@/components/ui/BrandLogo";
+import type { CmsLink } from "@/lib/payload/types";
 import { SiteContainer } from "./SiteContainer";
 
-const links = [
-  { href: "/", label: "Home", page: "home" },
-  { href: "/#about", label: "About Us", page: "about" },
-  { href: "/services", label: "Services", page: "services" },
-  { href: "/contact", label: "Contact Us", page: "contact" },
-];
-
 type NavbarProps = {
-  activePage?: "home" | "contact" | "services";
+  activePath: "/" | "/contact" | "/services";
+  links: CmsLink[];
+  cta: CmsLink;
+  logo: {
+    src: string;
+    alt: string;
+    businessName: string;
+  };
+  phoneIcon: string;
 };
 
-export function Navbar({ activePage = "home" }: NavbarProps) {
+export function Navbar({ activePath, links, cta, logo, phoneIcon }: NavbarProps) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -36,16 +38,16 @@ export function Navbar({ activePage = "home" }: NavbarProps) {
       aria-label="Primary navigation"
     >
       <SiteContainer className="flex h-full items-center justify-between">
-        <BrandLogo />
+        <BrandLogo {...logo} />
 
         <div className="hidden items-center gap-8 lg:flex">
           <div className="flex items-center gap-8">
             {links.map((link) => (
               <Link
-                key={link.href}
-                href={link.href}
+                key={`${link.url}-${link.label}`}
+                href={link.url}
                 className={`group relative py-2 text-lg uppercase leading-6 transition-colors hover:text-brand-gold ${
-                  link.page === activePage ? "text-brand-gold" : "font-light text-white"
+                  link.url === activePath ? "text-brand-gold" : "font-light text-white"
                 }`}
               >
                 {link.label}
@@ -54,10 +56,10 @@ export function Navbar({ activePage = "home" }: NavbarProps) {
             ))}
           </div>
           <a
-            href="tel:+64212219834"
+            href={cta.url}
             className="rounded-br-[1000px] rounded-tl-[1000px] border border-brand-gold px-[18px] py-2.5 text-lg font-light leading-[0.7] text-white transition-colors hover:bg-brand-gold hover:text-black"
           >
-            021 221 9834
+            {cta.label}
           </a>
         </div>
 
@@ -82,17 +84,17 @@ export function Navbar({ activePage = "home" }: NavbarProps) {
           <div className="mx-auto flex max-w-[1440px] flex-col gap-1">
             {links.map((link) => (
               <Link
-                key={link.href}
-                href={link.href}
+                key={`${link.url}-${link.label}`}
+                href={link.url}
                 onClick={() => setOpen(false)}
                 className="border-b border-white/10 py-3 text-lg uppercase text-white hover:text-brand-gold"
               >
                 {link.label}
               </Link>
             ))}
-            <a href="tel:+64212219834" className="mt-4 inline-flex items-center gap-3 text-brand-gold">
-              <Image src="/figma/phone.svg" alt="" width={28} height={28} />
-              021 221 9834
+            <a href={cta.url} className="mt-4 inline-flex items-center gap-3 text-brand-gold">
+              <Image src={phoneIcon} alt="" width={28} height={28} unoptimized />
+              {cta.label}
             </a>
           </div>
         </div>

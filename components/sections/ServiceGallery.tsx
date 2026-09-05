@@ -15,6 +15,8 @@ type ServiceGalleryProps = {
   label: string;
   images: ServiceGalleryImage[];
   theme?: "black" | "navy";
+  previousIcon: string;
+  nextIcon: string;
 };
 
 type Paging = {
@@ -23,7 +25,13 @@ type Paging = {
   pageStep: number;
 };
 
-export function ServiceGallery({ label, images, theme = "black" }: ServiceGalleryProps) {
+export function ServiceGallery({
+  label,
+  images,
+  theme = "black",
+  previousIcon,
+  nextIcon,
+}: ServiceGalleryProps) {
   const viewport = useRef<HTMLDivElement>(null);
   const [paused, setPaused] = useState(false);
   const [activePage, setActivePage] = useState(0);
@@ -125,7 +133,7 @@ export function ServiceGallery({ label, images, theme = "black" }: ServiceGaller
               aria-label={`Previous ${label} projects`}
               className="flex size-11 items-center justify-center rounded-full border border-brand-gold transition-colors hover:bg-brand-gold/15 sm:size-12"
             >
-              <Image src="/figma/chevron-left.svg" alt="" width={26} height={26} />
+              <Image src={previousIcon} alt="" width={26} height={26} unoptimized />
             </button>
             <button
               type="button"
@@ -133,7 +141,7 @@ export function ServiceGallery({ label, images, theme = "black" }: ServiceGaller
               aria-label={`Next ${label} projects`}
               className="flex size-11 items-center justify-center rounded-full border border-brand-gold transition-colors hover:bg-brand-gold/15 sm:size-12"
             >
-              <Image src="/figma/chevron-right.svg" alt="" width={26} height={26} />
+              <Image src={nextIcon} alt="" width={26} height={26} unoptimized />
             </button>
           </div>
         </div>

@@ -3,22 +3,33 @@ import { Footer } from "@/components/layout/Footer";
 import { ContactMapSection } from "@/components/sections/ContactMapSection";
 import { ContactPageHero } from "@/components/sections/ContactPageHero";
 import { ContactPageSection } from "@/components/sections/ContactPageSection";
+import { getBlock, getNavigation, getPage, getSiteSettings } from "@/lib/payload/client";
+import { getPageMetadata } from "@/lib/payload/metadata";
 
-export const metadata: Metadata = {
-  title: "Contact Travis Wood Builder | Whangārei",
-  description:
-    "Discuss your new build, renovation, extension or outdoor project with Travis Wood Builder in Whangārei.",
-};
+export const revalidate = 3600;
 
-export default function ContactPage() {
+export async function generateMetadata(): Promise<Metadata> {
+  return getPageMetadata("contact");
+}
+
+export default async function ContactPage() {
+  const [page, navigation, settings] = await Promise.all([
+    getPage("contact"),
+    getNavigation(),
+    getSiteSettings(),
+  ]);
+  const hero = getBlock(page, "heroSection");
+  const contact = getBlock(page, "contactSection");
+  const map = getBlock(page, "mapSection");
+
   return (
     <>
       <main className="overflow-hidden bg-black">
-        <ContactPageHero />
-        <ContactPageSection />
-        <ContactMapSection />
+        <ContactPageHero block={hero} navigation={navigation} settings={settings} />
+        <ContactPageSection block={contact} settings={settings} />
+        <ContactMapSection block={map} />
       </main>
-      <Footer />
+      <Footer navigation={navigation} settings={settings} />
     </>
   );
 }

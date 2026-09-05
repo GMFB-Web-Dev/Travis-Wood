@@ -1,8 +1,8 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+This is the Travis Wood Builder Next.js site. Published copy, navigation, links, settings text, and SEO are supplied by the `travis-wood-builder` tenant in Payload CMS. Images, logos, and icons are stored in the repository and deployed with the frontend.
 
 ## Getting Started
 
-First, run the development server:
+Copy `.env.example` to `.env.local`, keep every value server-only, then run the development server:
 
 ```bash
 npm run dev
@@ -18,7 +18,21 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Published content is cached for one hour and can be invalidated by the protected Payload revalidation endpoint. Draft fetching is available only through the authenticated, server-only helper and is never stored in the published cache.
+
+## Vercel environment variables
+
+Add these variables to Preview and Production in Vercel. None may use a `NEXT_PUBLIC_` prefix.
+
+- `PAYLOAD_URL`: `https://payload.vyomeshj.com`
+- `PAYLOAD_PREVIEW_TOKEN`: a server-only Payload API token, only if an authenticated preview entry point is added
+- `REVALIDATION_SECRET`: a random value of at least 32 characters, shared only with the Payload server hook
+
+Redeploy after adding or rotating environment variables. Configure the Payload deployment with the same `REVALIDATION_SECRET` and set `FRONTEND_REVALIDATION_URL=https://gmfb-travis-wood-builder.vercel.app/api/revalidate/payload`. Never create `NEXT_PUBLIC_REVALIDATION_SECRET`.
+
+## Payload hook installation
+
+The CMS repository is not included here, so its hook has not been installed. The exact module and collection wiring are documented in [docs/PAYLOAD_REVALIDATION_HOOK.md](docs/PAYLOAD_REVALIDATION_HOOK.md).
 
 ## Learn More
 

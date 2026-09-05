@@ -7,31 +7,27 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 
 const CARD_GAP = 32;
 
-const projects = [
-  { src: "/figma/gallery-1.png", alt: "Warm timber-lined entrance hallway" },
-  { src: "/figma/gallery-2.png", alt: "Architectural new home under construction" },
-  { src: "/figma/gallery-3.png", alt: "Night-lit courtyard at a completed home" },
-  { src: "/figma/gallery-4.png", alt: "Outdoor pool and timber deck" },
-  { src: "/figma/gallery-5.jpg", alt: "New home slab being prepared" },
-  { src: "/figma/gallery-6.jpg", alt: "Timber roof framing in progress" },
-  { src: "/figma/gallery-7.jpg", alt: "Residential build wrapped in scaffolding" },
-  { src: "/figma/gallery-8.jpg", alt: "Completed black-clad garden building" },
-  { src: "/figma/gallery-9.jpg", alt: "Timber deck taking shape around a new home" },
-  { src: "/figma/gallery-10.png", alt: "Custom fitted interior cabinetry" },
-  { src: "/figma/gallery-11.jpg", alt: "Timber outdoor structure under construction" },
-  { src: "/figma/gallery-12.jpg", alt: "Completed covered deck and pergola" },
-  { src: "/figma/gallery-13.jpg", alt: "Waterside timber screen and glass balustrade" },
-  { src: "/figma/gallery-14.jpg", alt: "Detailed timber retaining wall" },
-  { src: "/figma/gallery-15.jpg", alt: "Finished timber landscaping work" },
-];
-
 type Paging = {
   cardsPerPage: number;
   pageCount: number;
   pageStep: number;
 };
 
-export function WorkGallery() {
+type WorkGalleryProps = {
+  eyebrow: string;
+  heading: string;
+  projects: Array<{ src: string; alt: string }>;
+  previousIcon: string;
+  nextIcon: string;
+};
+
+export function WorkGallery({
+  eyebrow,
+  heading,
+  projects,
+  previousIcon,
+  nextIcon,
+}: WorkGalleryProps) {
   const viewport = useRef<HTMLDivElement>(null);
   const [hovered, setHovered] = useState(false);
   const [activePage, setActivePage] = useState(0);
@@ -47,7 +43,7 @@ export function WorkGallery() {
     const pageStep = cardsPerPage * (card.offsetWidth + CARD_GAP);
     setPaging({ cardsPerPage, pageCount, pageStep });
     setActivePage((current) => Math.min(current, pageCount - 1));
-  }, []);
+  }, [projects.length]);
 
   const goToPage = useCallback(
     (page: number) => {
@@ -84,7 +80,7 @@ export function WorkGallery() {
   return (
     <section className="overflow-hidden bg-black py-16 lg:min-h-[713px] lg:py-[33px]">
       <SiteContainer>
-        <SectionHeading eyebrow="Our Work" title="Built to Stand Apart" />
+        <SectionHeading eyebrow={eyebrow} title={heading} />
         <div
           ref={viewport}
           onScroll={syncActivePage}
@@ -130,7 +126,7 @@ export function WorkGallery() {
               aria-label="Previous projects"
               className="flex size-11 items-center justify-center rounded-full border border-brand-gold sm:size-12"
             >
-              <Image src="/figma/chevron-left.svg" alt="" width={26} height={26} />
+              <Image src={previousIcon} alt="" width={26} height={26} unoptimized />
             </button>
             <button
               type="button"
@@ -138,7 +134,7 @@ export function WorkGallery() {
               aria-label="Next projects"
               className="flex size-11 items-center justify-center rounded-full border border-brand-gold sm:size-12"
             >
-              <Image src="/figma/chevron-right.svg" alt="" width={26} height={26} />
+              <Image src={nextIcon} alt="" width={26} height={26} unoptimized />
             </button>
           </div>
         </div>

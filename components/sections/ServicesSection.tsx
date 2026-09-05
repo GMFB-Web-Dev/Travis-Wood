@@ -2,6 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { SiteContainer } from "@/components/layout/SiteContainer";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import type { ServicesGridBlock } from "@/lib/payload/types";
+import { SITE_ASSETS } from "@/lib/site-assets";
 
 type ServiceCardProps = {
   title: string;
@@ -9,6 +11,8 @@ type ServiceCardProps = {
   image: string;
   imageAlt: string;
   href: string;
+  linkLabel: string;
+  arrowIcon: string;
   layout: "new-builds" | "outdoor" | "renovations";
 };
 
@@ -18,6 +22,8 @@ function ServiceCard({
   image,
   imageAlt,
   href,
+  linkLabel,
+  arrowIcon,
   layout,
 }: ServiceCardProps) {
   const outerCorners = {
@@ -43,44 +49,35 @@ function ServiceCard({
         </h3>
         <p className="text-base font-light leading-6 text-white">{description}</p>
         <Link href={href} className="mt-2 inline-flex items-center gap-2 self-start text-base uppercase text-white hover:text-brand-gold">
-          Learn more
-          <Image src="/figma/arrow.svg" alt="" width={22} height={22} />
+          {linkLabel}
+          <Image src={arrowIcon} alt="" width={22} height={22} unoptimized />
         </Link>
       </div>
     </article>
   );
 }
 
-export function ServicesSection() {
+export function ServicesSection({ block, arrowIcon }: { block: ServicesGridBlock; arrowIcon: string }) {
+  const layouts = ["new-builds", "outdoor", "renovations"] as const;
+
   return (
-    <section id="services" className="bg-black py-16 lg:min-h-[1109px] lg:py-[33px]">
+    <section id={block.anchor || undefined} className="bg-black py-16 lg:min-h-[1109px] lg:py-[33px]">
       <SiteContainer>
-        <SectionHeading eyebrow="Our Services" title="For Every Part of Your Home" titleClassName="max-w-[800px]!" />
+        <SectionHeading eyebrow={block.eyebrow} title={block.heading} titleClassName="max-w-[800px]!" />
         <div className="mt-12 grid gap-8 lg:mt-[30px] lg:grid-cols-2">
-          <ServiceCard
-            title="New Builds"
-            description="Architectural and residential new builds, delivered with quality workmanship, considered details and a clear focus on lasting quality and finishes."
-            image="/figma/service-new-builds.png"
-            imageAlt="Architectural new home by Travis Wood Builder"
-            href="/services#new-builds"
-            layout="new-builds"
-          />
-          <ServiceCard
-            title="Outdoor Living"
-            description="Decks, fences, pergolas and retaining walls built to create practical outdoor spaces that complement your home and make better use of your section."
-            image="/figma/service-outdoor-living.png"
-            imageAlt="Outdoor living and pool area built in Whangārei"
-            href="/services#outdoor-living"
-            layout="outdoor"
-          />
-          <ServiceCard
-            title="Renovations & Extensions"
-            description="Renovations and extensions that improve how your home looks, feels and functions with high-quality workmanship from planning through to completion."
-            image="/figma/service-renovations.jpg"
-            imageAlt="Residential extension under construction"
-            href="/services#renovations-extensions"
-            layout="renovations"
-          />
+          {block.services.map((service, index) => (
+            <ServiceCard
+              key={`${service.url}-${service.title}`}
+              title={service.title}
+              description={service.description}
+              image={SITE_ASSETS.serviceCards[index] || SITE_ASSETS.serviceCards[0]}
+              imageAlt={service.alt}
+              href={service.url}
+              linkLabel={service.linkLabel}
+              arrowIcon={arrowIcon}
+              layout={layouts[index] || "renovations"}
+            />
+          ))}
         </div>
       </SiteContainer>
     </section>

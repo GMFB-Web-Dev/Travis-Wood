@@ -4,40 +4,17 @@ import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { SiteContainer } from "@/components/layout/SiteContainer";
 
-const testimonials = [
-  {
-    quote:
-      "From the first site meeting to the final walkthrough, communication was clear and the workmanship was excellent. Every detail was considered, and the finished home feels completely our own.",
-    author: "New-build client, Whangārei",
-  },
-  {
-    quote:
-      "Our renovation has transformed the way we use our home. The team worked carefully around our family, kept the site tidy and delivered a result that fits seamlessly with the original house.",
-    author: "Renovation client, Maunu",
-  },
-  {
-    quote:
-      "The new deck and outdoor area have become our favourite part of the property. Practical advice, thoughtful material choices and a beautifully finished result made the whole process easy.",
-    author: "Outdoor-living client, Kamo",
-  },
-  {
-    quote:
-      "Travis brought a calm, organised approach to our extension. We always knew what was happening next, decisions were explained clearly and the additional space feels like it has always belonged here.",
-    author: "Extension client, Tikipunga",
-  },
-  {
-    quote:
-      "Reliable timing and honest updates mattered to us, and that is exactly what we received. The quality of the finish is outstanding and the small details set the project apart.",
-    author: "Residential client, Northland",
-  },
-  {
-    quote:
-      "The team listened to what we wanted and found practical solutions whenever the build presented a challenge. The result has real character, and we would happily work with Travis again.",
-    author: "Homeowner, Whangārei",
-  },
-];
+type TestimonialsSectionProps = {
+  testimonials: Array<{ quote: string; author: string }>;
+  previousIcon: string;
+  nextIcon: string;
+};
 
-export function TestimonialsSection() {
+export function TestimonialsSection({
+  testimonials,
+  previousIcon,
+  nextIcon,
+}: TestimonialsSectionProps) {
   const viewport = useRef<HTMLDivElement>(null);
   const [activeSlide, setActiveSlide] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -47,7 +24,7 @@ export function TestimonialsSection() {
     const target = viewport.current;
     target?.scrollTo({ left: next * target.clientWidth, behavior: "smooth" });
     setActiveSlide(next);
-  }, []);
+  }, [testimonials.length]);
 
   useEffect(() => {
     if (paused) return;
@@ -77,7 +54,7 @@ export function TestimonialsSection() {
             onClick={() => goToSlide(activeSlide - 1)}
             className="absolute left-3 top-1/2 z-10 flex size-11 -translate-y-1/2 items-center justify-center rounded-full border border-brand-gold bg-brand-navy/80 transition-colors hover:bg-brand-gold/15 sm:left-9 sm:size-12 lg:left-[70px]"
           >
-            <Image src="/figma/chevron-left.svg" alt="" width={26} height={26} />
+            <Image src={previousIcon} alt="" width={26} height={26} unoptimized />
           </button>
 
           <div
@@ -107,7 +84,7 @@ export function TestimonialsSection() {
             onClick={() => goToSlide(activeSlide + 1)}
             className="absolute right-3 top-1/2 z-10 flex size-11 -translate-y-1/2 items-center justify-center rounded-full border border-brand-gold bg-brand-navy/80 transition-colors hover:bg-brand-gold/15 sm:right-9 sm:size-12 lg:right-[70px]"
           >
-            <Image src="/figma/chevron-right.svg" alt="" width={26} height={26} />
+            <Image src={nextIcon} alt="" width={26} height={26} unoptimized />
           </button>
 
           <div className="absolute bottom-9 left-1/2 z-10 flex -translate-x-1/2 gap-2" aria-label={`Testimonial ${activeSlide + 1} of ${testimonials.length}`}>

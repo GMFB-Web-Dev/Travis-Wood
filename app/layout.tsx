@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Allura, Montserrat } from "next/font/google";
+import { getSiteMetadata } from "@/lib/payload/metadata";
 import "./globals.css";
 
 const montserrat = Montserrat({
@@ -14,11 +15,9 @@ const allura = Allura({
   weight: "400",
 });
 
-export const metadata: Metadata = {
-  title: "Travis Wood Builder | Whangārei Residential Builders",
-  description:
-    "Travis Wood Builder provides new builds, renovations, extensions and outdoor living projects across Whangārei and surrounding areas.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return getSiteMetadata();
+}
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
