@@ -27,8 +27,10 @@ Add these variables to Preview and Production in Vercel. None may use a `NEXT_PU
 - `PAYLOAD_URL`: `https://payload.vyomeshj.com`
 - `PAYLOAD_PREVIEW_TOKEN`: a server-only Payload API token, only if an authenticated preview entry point is added
 - `REVALIDATION_SECRET`: a random value of at least 32 characters, shared only with the Payload server hook
+- `FORM_RESEND_API_KEY`: the server-only Resend API key used to deliver contact form enquiries
+- `FORM_RESEND_FROM_EMAIL`: an optional verified Resend sender, such as `Travis Wood Builder <contact@example.com>`; if omitted, the Resend onboarding sender is used for testing
 
-Redeploy after adding or rotating environment variables. Configure the Payload deployment with the same `REVALIDATION_SECRET` and set `FRONTEND_REVALIDATION_URL=https://gmfb-travis-wood-builder.vercel.app/api/revalidate/payload`. Never create `NEXT_PUBLIC_REVALIDATION_SECRET`.
+Redeploy after adding or rotating environment variables. Configure the Payload deployment with the same `REVALIDATION_SECRET` and set `FRONTEND_REVALIDATION_URL=https://gmfb-travis-wood-builder.vercel.app/api/revalidate/payload`. Never create `NEXT_PUBLIC_REVALIDATION_SECRET` or `NEXT_PUBLIC_FORM_RESEND_API_KEY`.
 
 ## Payload hook installation
 
