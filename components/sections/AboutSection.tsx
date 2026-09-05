@@ -24,7 +24,13 @@ export function AboutSection({ block }: { block: AboutSectionBlock }) {
       <div className="relative h-[260px] overflow-hidden rounded-br-[1000px] rounded-tl-[1000px] sm:h-[320px] lg:h-[368px]">
         <Image
           src={requireMediaUrl(block.image, "about section", "hero")}
-          alt={block.imageAlt || getMediaAlt(block.image)}
+          alt={
+            block.imageAlt ||
+            getMediaAlt(
+              block.image,
+              "Residential construction work by Travis Wood Builder in Whangārei",
+            )
+          }
           fill
           sizes="100vw"
           className="object-cover object-center"

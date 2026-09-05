@@ -10,6 +10,7 @@ import { ValuesSection } from "@/components/sections/ValuesSection";
 import { WorkGallery } from "@/components/sections/WorkGallery";
 import {
   getBlock,
+  getMediaAlt,
   getNavigation,
   getPage,
   getSiteSettings,
@@ -53,7 +54,12 @@ export default async function Home() {
           heading={gallery.heading}
           projects={gallery.images.map((item, index) => ({
             src: requireMediaUrl(item.image, `home gallery image ${index + 1}`, "card"),
-            alt: item.alt,
+            alt:
+              item.alt ||
+              getMediaAlt(
+                item.image,
+                `Residential building project by Travis Wood Builder in Whangārei, image ${index + 1}`,
+              ),
           }))}
           previousIcon={previousIcon}
           nextIcon={nextIcon}

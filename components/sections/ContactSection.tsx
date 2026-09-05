@@ -4,6 +4,7 @@ import { SiteContainer } from "@/components/layout/SiteContainer";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { requireMediaUrl } from "@/lib/payload/client";
 import type { ContactSectionBlock, SiteSettings } from "@/lib/payload/types";
+import { getBusinessContactDetail } from "@/lib/seo/config";
 
 export function ContactSection({ block, settings }: { block: ContactSectionBlock; settings: SiteSettings }) {
   return (
@@ -14,12 +15,20 @@ export function ContactSection({ block, settings }: { block: ContactSectionBlock
           <div>
             <SectionHeading eyebrow="" title={block.heading} className="[&>p]:hidden" />
             <address className="mt-8 flex flex-col gap-4 not-italic">
-              {block.details.map((detail) => (
-                <a key={`${detail.title}-${detail.value}`} href={detail.url} target={detail.url.startsWith("http") ? "_blank" : undefined} rel={detail.url.startsWith("http") ? "noreferrer" : undefined} className="flex items-center gap-4 text-base font-light leading-7 text-white hover:text-brand-gold sm:text-lg">
-                  <Image src={requireMediaUrl(detail.icon, `${detail.title} icon`)} alt="" width={32} height={32} unoptimized />
-                  {detail.value}
-                </a>
-              ))}
+              {block.details.map((detail) => {
+                const { value, url } = getBusinessContactDetail(
+                  detail.title,
+                  detail.value,
+                  detail.url,
+                );
+
+                return (
+                  <a key={`${detail.title}-${value}`} href={url} target={url.startsWith("http") ? "_blank" : undefined} rel={url.startsWith("http") ? "noopener noreferrer" : undefined} className="flex items-center gap-4 text-base font-light leading-7 text-white hover:text-brand-gold sm:text-lg">
+                    <Image src={requireMediaUrl(detail.icon, `${detail.title} icon`)} alt="" width={32} height={32} unoptimized />
+                    {value}
+                  </a>
+                );
+              })}
             </address>
           </div>
           {block.showForm && (

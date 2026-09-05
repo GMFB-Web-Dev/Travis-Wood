@@ -18,7 +18,13 @@ export function HeroSection({ block, navigation, settings }: HeroSectionProps) {
     <section id="top" className="relative min-h-[760px] overflow-hidden lg:min-h-[900px]">
       <Image
         src={requireMediaUrl(block.backgroundImage, "home hero", "hero")}
-        alt={block.backgroundAlt || getMediaAlt(block.backgroundImage)}
+        alt={
+          block.backgroundAlt ||
+          getMediaAlt(
+            block.backgroundImage,
+            "Architectural home built by Travis Wood Builder in Whangārei",
+          )
+        }
         fill
         priority
         sizes="100vw"

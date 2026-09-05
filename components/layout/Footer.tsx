@@ -20,6 +20,9 @@ export function Footer({ navigation, settings }: FooterProps) {
     url: social.url,
     icon: requireMediaUrl(social.icon, `${social.platform} icon`),
   }));
+  const legalLinks = settings.footer.legalLinks.filter(
+    (link) => link.url.trim() && link.url !== "#",
+  );
 
   return (
     <footer className="bg-brand-navy/65 py-12 lg:pb-12 lg:pt-16">
@@ -50,7 +53,7 @@ export function Footer({ navigation, settings }: FooterProps) {
                 key={`${social.platform}-${social.url}`}
                 href={social.url}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 aria-label={`${settings.businessName} on ${social.platform}`}
                 className="flex size-11 items-center justify-center rounded-full transition-colors hover:bg-white/10"
               >
@@ -62,8 +65,9 @@ export function Footer({ navigation, settings }: FooterProps) {
         <div className="mt-14 border-t border-brand-gold pt-8">
           <div className="flex flex-col items-center justify-center gap-3 text-center text-sm font-light leading-6 text-white md:flex-row md:gap-6 lg:text-base">
             <p>{settings.footer.copyright}</p>
-            <div className="flex flex-wrap justify-center gap-6">
-              {settings.footer.legalLinks.map((link) => (
+            {legalLinks.length ? (
+              <div className="flex flex-wrap justify-center gap-6">
+                {legalLinks.map((link) => (
                 <Link
                   key={`${link.url}-${link.label}`}
                   href={link.url}
@@ -71,8 +75,9 @@ export function Footer({ navigation, settings }: FooterProps) {
                 >
                   {link.label}
                 </Link>
-              ))}
-            </div>
+                ))}
+              </div>
+            ) : null}
           </div>
         </div>
       </SiteContainer>

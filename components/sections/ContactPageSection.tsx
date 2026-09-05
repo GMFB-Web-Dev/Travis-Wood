@@ -4,6 +4,7 @@ import { SiteContainer } from "@/components/layout/SiteContainer";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { requireMediaUrl } from "@/lib/payload/client";
 import type { ContactSectionBlock, SiteSettings } from "@/lib/payload/types";
+import { getBusinessContactDetail } from "@/lib/seo/config";
 
 export function ContactPageSection({ block, settings }: { block: ContactSectionBlock; settings: SiteSettings }) {
   return (
@@ -17,7 +18,12 @@ export function ContactPageSection({ block, settings }: { block: ContactSectionB
 
         <address className="mt-12 grid gap-10 not-italic sm:grid-cols-3 lg:mt-[46px]">
           {block.details.map((detail) => {
-            const external = detail.url.startsWith("http");
+            const { value, url } = getBusinessContactDetail(
+              detail.title,
+              detail.value,
+              detail.url,
+            );
+            const external = url.startsWith("http");
             return (
               <div key={detail.title} className="flex flex-col items-center text-center">
                 <div className="flex size-14 items-center justify-center rounded-full border border-brand-gold">
@@ -27,12 +33,12 @@ export function ContactPageSection({ block, settings }: { block: ContactSectionB
                   {detail.title}
                 </h2>
                 <a
-                  href={detail.url}
+                  href={url}
                   target={external ? "_blank" : undefined}
-                  rel={external ? "noreferrer" : undefined}
+                  rel={external ? "noopener noreferrer" : undefined}
                   className="mt-5 text-base font-light text-white underline underline-offset-4 hover:text-brand-gold sm:text-lg"
                 >
-                  {detail.value}
+                  {value}
                 </a>
               </div>
             );

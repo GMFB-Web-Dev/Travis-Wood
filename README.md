@@ -22,7 +22,11 @@ Published content is cached for one hour and can be invalidated by the protected
 
 ## Vercel environment variables
 
-Add these variables to Preview and Production in Vercel. None may use a `NEXT_PUBLIC_` prefix.
+Add these variables in Vercel. Redeploy after changing them.
+
+- `NEXT_PUBLIC_SITE_URL`: `https://gmfb-travis-wood-builder.vercel.app` (Production, Preview, and Development so every deployment emits the production canonical origin)
+
+The remaining variables are server-only and must not use a `NEXT_PUBLIC_` prefix:
 
 - `PAYLOAD_URL`: `https://payload.vyomeshj.com`
 - `PAYLOAD_PREVIEW_TOKEN`: a server-only Payload API token, only if an authenticated preview entry point is added

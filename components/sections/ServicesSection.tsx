@@ -71,7 +71,10 @@ export function ServicesSection({ block, arrowIcon }: { block: ServicesGridBlock
               title={service.title}
               description={service.description}
               image={requireMediaUrl(service.image, `service card "${service.title}"`, "card")}
-              imageAlt={service.alt}
+              imageAlt={
+                service.alt ||
+                `${service.title} project by Travis Wood Builder in Whangārei`
+              }
               href={service.url}
               linkLabel={service.linkLabel}
               arrowIcon={arrowIcon}

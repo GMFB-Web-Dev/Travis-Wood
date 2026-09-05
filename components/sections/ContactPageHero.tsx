@@ -18,7 +18,13 @@ export function ContactPageHero({ block, navigation, settings }: ContactPageHero
     <section id="top" className="relative min-h-[620px] overflow-hidden lg:h-[634px] lg:min-h-0">
       <Image
         src={requireMediaUrl(block.backgroundImage, "contact hero", "hero")}
-        alt={block.backgroundAlt || getMediaAlt(block.backgroundImage)}
+        alt={
+          block.backgroundAlt ||
+          getMediaAlt(
+            block.backgroundImage,
+            "Residential building project by Travis Wood Builder in Whangārei",
+          )
+        }
         fill
         priority
         sizes="100vw"

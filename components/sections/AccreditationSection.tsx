@@ -17,7 +17,10 @@ export function AccreditationSection({ block }: { block: AccreditationSectionBlo
         <div className="relative mx-auto mt-10 size-[194px] lg:absolute lg:right-[78px] lg:top-[38px] lg:mt-0">
           <Image
             src={requireMediaUrl(block.image, "accreditation image", "thumbnail")}
-            alt={block.imageAlt || getMediaAlt(block.image)}
+            alt={
+              block.imageAlt ||
+              getMediaAlt(block.image, "Travis Wood Builder trade accreditation")
+            }
             fill
             sizes="194px"
             className="object-contain"

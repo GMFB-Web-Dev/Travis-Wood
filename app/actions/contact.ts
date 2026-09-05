@@ -2,6 +2,7 @@
 
 import { Resend } from "resend";
 import { getSiteSettings } from "@/lib/payload/client";
+import { siteConfig } from "@/lib/seo/config";
 
 export type ContactFormState = {
   status: "idle" | "success" | "error";
@@ -103,7 +104,7 @@ export async function submitContactForm(
 
     const { error } = await resend.emails.send({
       from: sender,
-      to: settings.contact.email,
+      to: siteConfig.business.email,
       replyTo: email,
       subject: `Contact Us: ${service} enquiry from ${fullName}`,
       text: [

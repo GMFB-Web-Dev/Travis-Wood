@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Footer } from "@/components/layout/Footer";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { ContactSection } from "@/components/sections/ContactSection";
 import { ServiceDetailSection } from "@/components/sections/ServiceDetailSection";
 import { ServicesPageHero } from "@/components/sections/ServicesPageHero";
@@ -12,6 +13,7 @@ import {
   requireUiAsset,
 } from "@/lib/payload/client";
 import { getPageMetadata } from "@/lib/payload/metadata";
+import { getBreadcrumbJsonLd, getServicesJsonLd } from "@/lib/seo/structured-data";
 
 export const revalidate = 3600;
 
@@ -38,6 +40,8 @@ export default async function ServicesPage() {
 
   return (
     <>
+      <JsonLd data={getBreadcrumbJsonLd({ name: "Services", path: "/services" })} />
+      <JsonLd data={getServicesJsonLd(services)} />
       <main className="overflow-hidden bg-black">
         <ServicesPageHero block={hero} navigation={navigation} settings={settings} />
         {services.map((service) => (
