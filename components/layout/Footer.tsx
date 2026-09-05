@@ -1,8 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { BrandLogo } from "@/components/ui/BrandLogo";
+import { getMediaAlt, requireMediaUrl } from "@/lib/payload/client";
 import type { Navigation, SiteSettings } from "@/lib/payload/types";
-import { SITE_ASSETS } from "@/lib/site-assets";
 import { SiteContainer } from "./SiteContainer";
 
 type FooterProps = {
@@ -11,10 +11,14 @@ type FooterProps = {
 };
 
 export function Footer({ navigation, settings }: FooterProps) {
+  const logo = {
+    src: requireMediaUrl(settings.logo, "site logo"),
+    alt: getMediaAlt(settings.logo, settings.businessName),
+  };
   const socialIcons = settings.socialLinks.map((social) => ({
     platform: social.platform,
     url: social.url,
-    icon: SITE_ASSETS.facebook,
+    icon: requireMediaUrl(social.icon, `${social.platform} icon`),
   }));
 
   return (
@@ -23,8 +27,8 @@ export function Footer({ navigation, settings }: FooterProps) {
         <div className="flex flex-col items-center justify-between gap-8 md:flex-row">
           <BrandLogo
             variant="footer"
-            src={SITE_ASSETS.logo}
-            alt={settings.businessName}
+            src={logo.src}
+            alt={logo.alt}
             businessName={settings.businessName}
           />
           <nav aria-label="Footer navigation" className="flex flex-wrap justify-center gap-x-8 gap-y-3">

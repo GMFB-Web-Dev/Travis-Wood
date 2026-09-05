@@ -1,4 +1,4 @@
-This is the Travis Wood Builder Next.js site. Published copy, navigation, links, settings text, and SEO are supplied by the `travis-wood-builder` tenant in Payload CMS. Images, logos, and icons are stored in the repository and deployed with the frontend.
+This is the Travis Wood Builder Next.js site. Published page content, navigation, settings, SEO, images, logos, and icons are supplied by the `travis-wood-builder` tenant in Payload CMS.
 
 ## Getting Started
 

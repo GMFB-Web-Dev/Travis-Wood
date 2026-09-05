@@ -2,8 +2,8 @@ import Image from "next/image";
 import { Navbar } from "@/components/layout/Navbar";
 import { SiteContainer } from "@/components/layout/SiteContainer";
 import { LinkButton } from "@/components/ui/Button";
+import { getMediaAlt, requireMediaUrl, requireUiAsset } from "@/lib/payload/client";
 import type { HeroSectionBlock, Navigation, SiteSettings } from "@/lib/payload/types";
-import { SITE_ASSETS } from "@/lib/site-assets";
 
 type ContactPageHeroProps = {
   block: HeroSectionBlock;
@@ -17,8 +17,8 @@ export function ContactPageHero({ block, navigation, settings }: ContactPageHero
   return (
     <section id="top" className="relative min-h-[620px] overflow-hidden lg:h-[634px] lg:min-h-0">
       <Image
-        src={SITE_ASSETS.hero.contact}
-        alt={block.backgroundAlt}
+        src={requireMediaUrl(block.backgroundImage, "contact hero", "hero")}
+        alt={block.backgroundAlt || getMediaAlt(block.backgroundImage)}
         fill
         priority
         sizes="100vw"
@@ -30,11 +30,11 @@ export function ContactPageHero({ block, navigation, settings }: ContactPageHero
         links={navigation.headerLinks}
         cta={navigation.headerCTA}
         logo={{
-          src: SITE_ASSETS.logo,
-          alt: settings.businessName,
+          src: requireMediaUrl(settings.logo, "site logo"),
+          alt: getMediaAlt(settings.logo, settings.businessName),
           businessName: settings.businessName,
         }}
-        phoneIcon={SITE_ASSETS.phone}
+        phoneIcon={requireUiAsset(settings, "phone")}
       />
       <SiteContainer className="relative z-10 flex min-h-[620px] items-end pb-12 pt-36 lg:h-[634px] lg:min-h-0">
         <div className="max-w-[970px]">

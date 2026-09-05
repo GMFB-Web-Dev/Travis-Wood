@@ -2,8 +2,8 @@ import Image from "next/image";
 import { ContactForm } from "@/components/forms/ContactForm";
 import { SiteContainer } from "@/components/layout/SiteContainer";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { requireMediaUrl } from "@/lib/payload/client";
 import type { ContactSectionBlock, SiteSettings } from "@/lib/payload/types";
-import { getContactIcon } from "@/lib/site-assets";
 
 export function ContactPageSection({ block, settings }: { block: ContactSectionBlock; settings: SiteSettings }) {
   return (
@@ -16,12 +16,12 @@ export function ContactPageSection({ block, settings }: { block: ContactSectionB
         />
 
         <address className="mt-12 grid gap-10 not-italic sm:grid-cols-3 lg:mt-[46px]">
-          {block.details.map((detail, index) => {
+          {block.details.map((detail) => {
             const external = detail.url.startsWith("http");
             return (
               <div key={detail.title} className="flex flex-col items-center text-center">
                 <div className="flex size-14 items-center justify-center rounded-full border border-brand-gold">
-                  <Image src={getContactIcon(detail.title, index)} alt="" width={32} height={32} />
+                  <Image src={requireMediaUrl(detail.icon, `${detail.title} icon`)} alt="" width={32} height={32} unoptimized />
                 </div>
                 <h2 className="mt-6 text-2xl font-light uppercase leading-8 text-white lg:text-[28px]">
                   {detail.title}

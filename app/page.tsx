@@ -13,9 +13,10 @@ import {
   getNavigation,
   getPage,
   getSiteSettings,
+  requireMediaUrl,
+  requireUiAsset,
 } from "@/lib/payload/client";
 import { getPageMetadata } from "@/lib/payload/metadata";
-import { SITE_ASSETS } from "@/lib/site-assets";
 
 export const revalidate = 3600;
 
@@ -37,28 +38,31 @@ export default async function Home() {
   const accreditation = getBlock(page, "accreditationSection");
   const testimonials = getBlock(page, "testimonialsSection");
   const contact = getBlock(page, "contactSection");
+  const previousIcon = requireUiAsset(settings, "previous");
+  const nextIcon = requireUiAsset(settings, "next");
+
   return (
     <>
       <main className="overflow-hidden bg-black">
         <HeroSection block={hero} navigation={navigation} settings={settings} />
         <AboutSection block={about} />
-        <ServicesSection block={services} arrowIcon={SITE_ASSETS.arrow} />
+        <ServicesSection block={services} arrowIcon={requireUiAsset(settings, "arrow")} />
         <ValuesSection block={values} />
         <WorkGallery
           eyebrow={gallery.eyebrow}
           heading={gallery.heading}
           projects={gallery.images.map((item, index) => ({
-            src: SITE_ASSETS.homeGallery[index] || SITE_ASSETS.homeGallery[0],
+            src: requireMediaUrl(item.image, `home gallery image ${index + 1}`, "card"),
             alt: item.alt,
           }))}
-          previousIcon={SITE_ASSETS.previous}
-          nextIcon={SITE_ASSETS.next}
+          previousIcon={previousIcon}
+          nextIcon={nextIcon}
         />
         <AccreditationSection block={accreditation} />
         <TestimonialsSection
           testimonials={testimonials.testimonials}
-          previousIcon={SITE_ASSETS.previous}
-          nextIcon={SITE_ASSETS.next}
+          previousIcon={previousIcon}
+          nextIcon={nextIcon}
         />
         <ContactSection block={contact} settings={settings} />
       </main>

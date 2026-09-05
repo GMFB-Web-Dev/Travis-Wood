@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { SiteContainer } from "@/components/layout/SiteContainer";
+import { requireMediaUrl } from "@/lib/payload/client";
 import type { ServiceDetailBlock } from "@/lib/payload/types";
 import type { ServiceGalleryImage } from "./ServiceGallery";
 import { ServiceGallery } from "./ServiceGallery";
@@ -10,7 +11,6 @@ type ServiceDetailSectionProps = {
   arrowIcon: string;
   previousIcon: string;
   nextIcon: string;
-  imageSources: readonly string[];
 };
 
 export function ServiceDetailSection({
@@ -18,18 +18,13 @@ export function ServiceDetailSection({
   arrowIcon,
   previousIcon,
   nextIcon,
-  imageSources,
 }: ServiceDetailSectionProps) {
   const { anchor, eyebrow, heading, intro, includedHeading, bullets, body, theme, cta } = block;
   const isNavy = theme === "navy";
   const images: ServiceGalleryImage[] = block.images.map((image, index) => ({
-    src: imageSources[index] || imageSources[0],
+    src: requireMediaUrl(image.image, `${eyebrow} gallery image ${index + 1}`, "card"),
     alt: image.alt,
   }));
-
-  if (!imageSources.length) {
-    throw new Error(`No local gallery images are configured for ${eyebrow}.`);
-  }
 
   return (
     <>

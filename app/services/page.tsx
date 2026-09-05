@@ -9,9 +9,9 @@ import {
   getNavigation,
   getPage,
   getSiteSettings,
+  requireUiAsset,
 } from "@/lib/payload/client";
 import { getPageMetadata } from "@/lib/payload/metadata";
-import { getServiceGalleryImages, SITE_ASSETS } from "@/lib/site-assets";
 
 export const revalidate = 3600;
 
@@ -28,6 +28,10 @@ export default async function ServicesPage() {
   const hero = getBlock(page, "heroSection");
   const services = getBlocks(page, "serviceDetail");
   const contact = getBlock(page, "contactSection");
+  const arrowIcon = requireUiAsset(settings, "arrow");
+  const previousIcon = requireUiAsset(settings, "previous");
+  const nextIcon = requireUiAsset(settings, "next");
+
   if (services.length === 0) {
     throw new Error('Payload page "services" does not contain any serviceDetail blocks.');
   }
@@ -36,14 +40,13 @@ export default async function ServicesPage() {
     <>
       <main className="overflow-hidden bg-black">
         <ServicesPageHero block={hero} navigation={navigation} settings={settings} />
-        {services.map((service, index) => (
+        {services.map((service) => (
           <ServiceDetailSection
             key={service.id || service.anchor || service.heading}
             block={service}
-            arrowIcon={SITE_ASSETS.arrow}
-            previousIcon={SITE_ASSETS.previous}
-            nextIcon={SITE_ASSETS.next}
-            imageSources={getServiceGalleryImages(service.anchor, index)}
+            arrowIcon={arrowIcon}
+            previousIcon={previousIcon}
+            nextIcon={nextIcon}
           />
         ))}
         <ContactSection block={contact} settings={settings} />

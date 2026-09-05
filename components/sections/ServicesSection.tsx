@@ -2,8 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { SiteContainer } from "@/components/layout/SiteContainer";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { requireMediaUrl } from "@/lib/payload/client";
 import type { ServicesGridBlock } from "@/lib/payload/types";
-import { SITE_ASSETS } from "@/lib/site-assets";
 
 type ServiceCardProps = {
   title: string;
@@ -70,7 +70,7 @@ export function ServicesSection({ block, arrowIcon }: { block: ServicesGridBlock
               key={`${service.url}-${service.title}`}
               title={service.title}
               description={service.description}
-              image={SITE_ASSETS.serviceCards[index] || SITE_ASSETS.serviceCards[0]}
+              image={requireMediaUrl(service.image, `service card "${service.title}"`, "card")}
               imageAlt={service.alt}
               href={service.url}
               linkLabel={service.linkLabel}

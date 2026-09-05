@@ -2,8 +2,8 @@ import Image from "next/image";
 import { SiteContainer } from "@/components/layout/SiteContainer";
 import { LinkButton } from "@/components/ui/Button";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { getMediaAlt, requireMediaUrl } from "@/lib/payload/client";
 import type { AboutSectionBlock } from "@/lib/payload/types";
-import { SITE_ASSETS } from "@/lib/site-assets";
 
 export function AboutSection({ block }: { block: AboutSectionBlock }) {
   return (
@@ -23,8 +23,8 @@ export function AboutSection({ block }: { block: AboutSectionBlock }) {
       </section>
       <div className="relative h-[260px] overflow-hidden rounded-br-[1000px] rounded-tl-[1000px] sm:h-[320px] lg:h-[368px]">
         <Image
-          src={SITE_ASSETS.about}
-          alt={block.imageAlt}
+          src={requireMediaUrl(block.image, "about section", "hero")}
+          alt={block.imageAlt || getMediaAlt(block.image)}
           fill
           sizes="100vw"
           className="object-cover object-center"

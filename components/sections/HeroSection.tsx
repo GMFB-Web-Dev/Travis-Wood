@@ -2,8 +2,8 @@ import Image from "next/image";
 import { Navbar } from "@/components/layout/Navbar";
 import { SiteContainer } from "@/components/layout/SiteContainer";
 import { LinkButton } from "@/components/ui/Button";
+import { getMediaAlt, requireMediaUrl, requireUiAsset } from "@/lib/payload/client";
 import type { HeroSectionBlock, Navigation, SiteSettings } from "@/lib/payload/types";
-import { SITE_ASSETS } from "@/lib/site-assets";
 
 type HeroSectionProps = {
   block: HeroSectionBlock;
@@ -17,8 +17,8 @@ export function HeroSection({ block, navigation, settings }: HeroSectionProps) {
   return (
     <section id="top" className="relative min-h-[760px] overflow-hidden lg:min-h-[900px]">
       <Image
-        src={SITE_ASSETS.hero.home}
-        alt={block.backgroundAlt}
+        src={requireMediaUrl(block.backgroundImage, "home hero", "hero")}
+        alt={block.backgroundAlt || getMediaAlt(block.backgroundImage)}
         fill
         priority
         sizes="100vw"
@@ -30,11 +30,11 @@ export function HeroSection({ block, navigation, settings }: HeroSectionProps) {
         links={navigation.headerLinks}
         cta={navigation.headerCTA}
         logo={{
-          src: SITE_ASSETS.logo,
-          alt: settings.businessName,
+          src: requireMediaUrl(settings.logo, "site logo"),
+          alt: getMediaAlt(settings.logo, settings.businessName),
           businessName: settings.businessName,
         }}
-        phoneIcon={SITE_ASSETS.phone}
+        phoneIcon={requireUiAsset(settings, "phone")}
       />
       <SiteContainer className="relative z-10 pt-[230px] sm:pt-[280px] lg:pt-[340px]">
         <div className="max-w-[1100px]">

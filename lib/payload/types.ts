@@ -1,5 +1,36 @@
 export type PayloadId = number | string;
 
+export type MediaVariant = {
+  url: string | null;
+  width?: number | null;
+  height?: number | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  filename?: string | null;
+};
+
+export type Media = {
+  id: PayloadId;
+  alt?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  url: string;
+  thumbnailURL?: string | null;
+  sizes?: {
+    thumbnail?: MediaVariant | null;
+    card?: MediaVariant | null;
+    hero?: MediaVariant | null;
+  } | null;
+  createdAt?: string;
+  updatedAt?: string;
+};
+
+export type MediaRelation = PayloadId | Media;
+export type MediaSize = "thumbnail" | "card" | "hero";
+
 export type CmsLink = {
   label: string;
   url: string;
@@ -14,6 +45,7 @@ type BlockBase<T extends string> = {
 export type HeroSectionBlock = BlockBase<"heroSection"> & {
   heading: string;
   description: string;
+  backgroundImage: MediaRelation;
   backgroundAlt: string;
   buttons: CmsLink[];
 };
@@ -23,6 +55,7 @@ export type AboutSectionBlock = BlockBase<"aboutSection"> & {
   eyebrow: string;
   heading: string;
   paragraphs: Array<{ text: string }>;
+  image: MediaRelation;
   imageAlt: string;
   cta: CmsLink;
 };
@@ -34,6 +67,7 @@ export type ServicesGridBlock = BlockBase<"servicesGrid"> & {
   services: Array<{
     title: string;
     description: string;
+    image: MediaRelation;
     alt: string;
     url: string;
     linkLabel: string;
@@ -53,6 +87,7 @@ export type GallerySectionBlock = BlockBase<"gallerySection"> & {
   eyebrow: string;
   heading: string;
   images: Array<{
+    image: MediaRelation;
     alt: string;
   }>;
 };
@@ -61,6 +96,7 @@ export type AccreditationSectionBlock = BlockBase<"accreditationSection"> & {
   eyebrow: string;
   heading: string;
   description: string;
+  image: MediaRelation;
   imageAlt: string;
 };
 
@@ -79,6 +115,7 @@ export type ContactSectionBlock = BlockBase<"contactSection"> & {
     title: string;
     value: string;
     url: string;
+    icon: MediaRelation;
   }>;
   showForm: boolean;
 };
@@ -92,6 +129,7 @@ export type ServiceDetailBlock = BlockBase<"serviceDetail"> & {
   bullets: Array<{ text: string }>;
   body: string;
   images: Array<{
+    image: MediaRelation;
     alt: string;
   }>;
   theme: "black" | "navy";
@@ -133,6 +171,7 @@ export type CmsPage = {
     heading?: string | null;
     description?: string | null;
   } | null;
+  featuredImage?: MediaRelation | null;
   layout: PageBlock[];
   seo?: Seo | null;
   _status: "published" | "draft";
@@ -160,6 +199,12 @@ export type SiteSettings = {
   id: PayloadId;
   businessName: string;
   sourceHash?: string | null;
+  logo: MediaRelation;
+  favicon: MediaRelation;
+  uiAssets: Array<{
+    key: string;
+    asset: MediaRelation;
+  }>;
   contact: {
     email: string;
     phoneDisplay: string;
@@ -171,6 +216,7 @@ export type SiteSettings = {
   socialLinks: Array<{
     platform: string;
     url: string;
+    icon: MediaRelation;
   }>;
   defaultSEO: Seo;
   primaryCTA: CmsLink;

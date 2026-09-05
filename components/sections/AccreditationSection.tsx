@@ -1,8 +1,8 @@
 import Image from "next/image";
 import { SiteContainer } from "@/components/layout/SiteContainer";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { getMediaAlt, requireMediaUrl } from "@/lib/payload/client";
 import type { AccreditationSectionBlock } from "@/lib/payload/types";
-import { SITE_ASSETS } from "@/lib/site-assets";
 
 export function AccreditationSection({ block }: { block: AccreditationSectionBlock }) {
   return (
@@ -16,8 +16,8 @@ export function AccreditationSection({ block }: { block: AccreditationSectionBlo
         </div>
         <div className="relative mx-auto mt-10 size-[194px] lg:absolute lg:right-[78px] lg:top-[38px] lg:mt-0">
           <Image
-            src={SITE_ASSETS.accreditation}
-            alt={block.imageAlt}
+            src={requireMediaUrl(block.image, "accreditation image", "thumbnail")}
+            alt={block.imageAlt || getMediaAlt(block.image)}
             fill
             sizes="194px"
             className="object-contain"

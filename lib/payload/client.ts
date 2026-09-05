@@ -5,11 +5,14 @@ import { cache } from "react";
 import type {
   BlockOf,
   CmsPage,
+  Media,
+  MediaRelation,
+  MediaSize,
   Navigation,
   PageBlockType,
   SiteSettings,
 } from "./types";
-import { isCmsPage, isNavigation, isSiteSettings, parseListResponse } from "./validation";
+import { isCmsPage, isMedia, isNavigation, isSiteSettings, parseListResponse } from "./validation";
 
 export const TENANT_SLUG = "travis-wood-builder";
 export const PAYLOAD_REVALIDATE_SECONDS = 3600;
@@ -66,7 +69,7 @@ async function fetchPublishedPage(slug: string): Promise<CmsPage> {
     "where[tenant.slug][equals]": TENANT_SLUG,
     "where[slug][equals]": slug,
     "where[_status][equals]": "published",
-    depth: 0,
+    depth: 3,
     limit: 1,
   });
   const response = parseListResponse(await requestPayload(url), isCmsPage, "pages");
@@ -95,7 +98,7 @@ export const getPage = cache(async (slug: string) => getPersistentlyCachedPage(s
 async function fetchNavigation(): Promise<Navigation> {
   const url = buildPayloadUrl("navigation", {
     "where[tenant.slug][equals]": TENANT_SLUG,
-    depth: 0,
+    depth: 2,
     limit: 1,
   });
   const response = parseListResponse(await requestPayload(url), isNavigation, "navigation");
@@ -111,7 +114,7 @@ async function fetchNavigation(): Promise<Navigation> {
 async function fetchSiteSettings(): Promise<SiteSettings> {
   const url = buildPayloadUrl("tenant-site-settings", {
     "where[tenant.slug][equals]": TENANT_SLUG,
-    depth: 0,
+    depth: 2,
     limit: 1,
   });
   const response = parseListResponse(
@@ -151,7 +154,7 @@ export async function getAuthenticatedDraftPage(slug: string): Promise<CmsPage> 
     "where[tenant.slug][equals]": TENANT_SLUG,
     "where[slug][equals]": slug,
     draft: true,
-    depth: 0,
+    depth: 3,
     limit: 1,
   });
   const response = parseListResponse(
@@ -187,4 +190,45 @@ export function getBlock<T extends PageBlockType>(
 
 export function getBlocks<T extends PageBlockType>(page: CmsPage, blockType: T): BlockOf<T>[] {
   return page.layout.filter((block): block is BlockOf<T> => block.blockType === blockType);
+}
+
+export function getMedia(relation: MediaRelation | null | undefined): Media | null {
+  return isMedia(relation) ? relation : null;
+}
+
+export function getMediaUrl(
+  relation: MediaRelation | null | undefined,
+  preferredSize?: MediaSize,
+): string | null {
+  const media = getMedia(relation);
+  if (!media) return null;
+
+  const variantUrl = preferredSize ? media.sizes?.[preferredSize]?.url : null;
+  return variantUrl || media.url;
+}
+
+export function requireMediaUrl(
+  relation: MediaRelation | null | undefined,
+  label: string,
+  preferredSize?: MediaSize,
+) {
+  const url = getMediaUrl(relation, preferredSize);
+  if (!url) {
+    throw new Error(
+      `Payload media for ${label} was not populated. Increase the request depth or restore the media record.`,
+    );
+  }
+  return url;
+}
+
+export function getMediaAlt(relation: MediaRelation | null | undefined, fallback = "") {
+  return getMedia(relation)?.alt || fallback;
+}
+
+export function requireUiAsset(settings: SiteSettings, key: string) {
+  const item = settings.uiAssets.find((asset) => asset.key === key);
+  if (!item) {
+    throw new Error(`Payload site settings are missing the "${key}" UI asset.`);
+  }
+  return requireMediaUrl(item.asset, `UI asset "${key}"`);
 }

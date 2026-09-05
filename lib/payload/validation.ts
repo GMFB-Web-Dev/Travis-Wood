@@ -2,6 +2,8 @@ import type {
   CmsLink,
   CmsPage,
   ContactFormSettings,
+  Media,
+  MediaRelation,
   Navigation,
   PageBlock,
   PayloadId,
@@ -26,6 +28,20 @@ const isOptionalString = (value: unknown): value is string | null | undefined =>
   value === undefined || isNullableString(value);
 
 const hasBaseBlockShape = (value: UnknownRecord, blockType: string) => value.blockType === blockType;
+
+export function isMedia(value: unknown): value is Media {
+  return (
+    isRecord(value) &&
+    isId(value.id) &&
+    isString(value.url) &&
+    isOptionalString(value.alt) &&
+    (value.sizes === undefined || value.sizes === null || isRecord(value.sizes))
+  );
+}
+
+export function isMediaRelation(value: unknown): value is MediaRelation {
+  return isId(value) || isMedia(value);
+}
 
 function isLink(value: unknown): value is CmsLink {
   return isRecord(value) && isString(value.label) && isString(value.url);
@@ -52,6 +68,7 @@ function isPageBlock(value: unknown): value is PageBlock {
         hasBaseBlockShape(value, "heroSection") &&
         isString(value.heading) &&
         isString(value.description) &&
+        isMediaRelation(value.backgroundImage) &&
         isString(value.backgroundAlt) &&
         isArrayOf(value.buttons, isLink)
       );
@@ -60,6 +77,7 @@ function isPageBlock(value: unknown): value is PageBlock {
         isString(value.eyebrow) &&
         isString(value.heading) &&
         isArrayOf(value.paragraphs, isTextItem) &&
+        isMediaRelation(value.image) &&
         isString(value.imageAlt) &&
         isLink(value.cta) &&
         isOptionalString(value.anchor)
@@ -75,6 +93,7 @@ function isPageBlock(value: unknown): value is PageBlock {
             isRecord(service) &&
             isString(service.title) &&
             isString(service.description) &&
+            isMediaRelation(service.image) &&
             isString(service.alt) &&
             isString(service.url) &&
             isString(service.linkLabel),
@@ -96,7 +115,8 @@ function isPageBlock(value: unknown): value is PageBlock {
         isString(value.heading) &&
         isArrayOf(
           value.images,
-          (item): item is { alt: string } => isRecord(item) && isString(item.alt),
+          (item): item is { image: MediaRelation; alt: string } =>
+            isRecord(item) && isMediaRelation(item.image) && isString(item.alt),
         ) &&
         value.images.length > 0
       );
@@ -105,6 +125,7 @@ function isPageBlock(value: unknown): value is PageBlock {
         isString(value.eyebrow) &&
         isString(value.heading) &&
         isString(value.description) &&
+        isMediaRelation(value.image) &&
         isString(value.imageAlt)
       );
     case "testimonialsSection":
@@ -128,7 +149,8 @@ function isPageBlock(value: unknown): value is PageBlock {
             isRecord(item) &&
             isString(item.title) &&
             isString(item.value) &&
-            isString(item.url),
+            isString(item.url) &&
+            isMediaRelation(item.icon),
         )
       );
     case "serviceDetail":
@@ -142,7 +164,8 @@ function isPageBlock(value: unknown): value is PageBlock {
         isString(value.body) &&
         isArrayOf(
           value.images,
-          (item): item is { alt: string } => isRecord(item) && isString(item.alt),
+          (item): item is { image: MediaRelation; alt: string } =>
+            isRecord(item) && isMediaRelation(item.image) && isString(item.alt),
         ) &&
         value.images.length > 0 &&
         (value.theme === "black" || value.theme === "navy") &&
@@ -164,6 +187,7 @@ export function isCmsPage(value: unknown): value is CmsPage {
     isString(value.path) &&
     isArrayOf(value.layout, isPageBlock) &&
     (value.seo === undefined || value.seo === null || isSeo(value.seo)) &&
+    (value.featuredImage === undefined || value.featuredImage === null || isMediaRelation(value.featuredImage)) &&
     (value._status === "published" || value._status === "draft")
   );
 }
@@ -197,6 +221,13 @@ export function isSiteSettings(value: unknown): value is SiteSettings {
     isRecord(value) &&
     isId(value.id) &&
     isString(value.businessName) &&
+    isMediaRelation(value.logo) &&
+    isMediaRelation(value.favicon) &&
+    isArrayOf(
+      value.uiAssets,
+      (item): item is SiteSettings["uiAssets"][number] =>
+        isRecord(item) && isString(item.key) && isMediaRelation(item.asset),
+    ) &&
     isRecord(value.contact) &&
     isString(value.contact.email) &&
     isString(value.contact.phoneDisplay) &&
@@ -209,7 +240,8 @@ export function isSiteSettings(value: unknown): value is SiteSettings {
       (item): item is SiteSettings["socialLinks"][number] =>
         isRecord(item) &&
         isString(item.platform) &&
-        isString(item.url),
+        isString(item.url) &&
+        isMediaRelation(item.icon),
     ) &&
     isSeo(value.defaultSEO) &&
     isLink(value.primaryCTA) &&
