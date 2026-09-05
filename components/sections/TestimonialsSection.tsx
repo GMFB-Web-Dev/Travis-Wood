@@ -42,7 +42,7 @@ export function TestimonialsSection({
     <section className="bg-black py-10 lg:min-h-[403px] lg:py-8">
       <SiteContainer>
         <div
-          className="relative flex min-h-[430px] items-center rounded-br-[110px] rounded-tl-[110px] bg-brand-navy/65 py-14 sm:min-h-[360px] sm:rounded-br-[1000px] sm:rounded-tl-[1000px] sm:py-12"
+          className="relative flex min-h-[430px] items-center overflow-hidden rounded-br-[110px] rounded-tl-[110px] bg-brand-navy/65 py-14 sm:min-h-[360px] sm:rounded-br-[1000px] sm:rounded-tl-[1000px] sm:py-12"
           onMouseEnter={() => setPaused(true)}
           onMouseLeave={() => setPaused(false)}
           onFocusCapture={() => setPaused(true)}
