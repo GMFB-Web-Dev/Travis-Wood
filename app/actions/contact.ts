@@ -1,8 +1,10 @@
 "use server";
 
 import { Resend } from "resend";
+import { headers } from "next/headers";
 import { getSiteSettings } from "@/lib/payload/client";
 import { siteConfig } from "@/lib/seo/config";
+import { verifyTurnstileToken } from "@/lib/turnstile/verify";
 
 export type ContactFormState = {
   status: "idle" | "success" | "error";
@@ -13,6 +15,8 @@ const GENERIC_ERROR_MESSAGE =
   "We couldn’t send your enquiry. Please try again or contact us by phone or email.";
 const SUCCESS_MESSAGE =
   "Thanks. Your enquiry has been sent. We’ll be in touch soon.";
+const TURNSTILE_ERROR_MESSAGE =
+  "Please complete the security check and try again.";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -39,6 +43,24 @@ export async function submitContactForm(
   _previousState: ContactFormState,
   formData: FormData,
 ): Promise<ContactFormState> {
+  const turnstileToken = getField(formData, "cf-turnstile-response");
+  const requestHeaders = await headers();
+  const remoteIp = requestHeaders
+    .get("x-forwarded-for")
+    ?.split(",")[0]
+    ?.trim();
+  const isHuman = await verifyTurnstileToken({
+    token: turnstileToken,
+    remoteIp,
+  });
+
+  if (!isHuman) {
+    return {
+      status: "error",
+      message: TURNSTILE_ERROR_MESSAGE,
+    };
+  }
+
   const firstName = getField(formData, "firstName");
   const lastName = getField(formData, "lastName");
   const email = getField(formData, "email").toLowerCase();
