@@ -23,7 +23,6 @@ type TurnstileRenderOptions = {
 };
 
 type TurnstileApi = {
-  ready: (callback: () => void) => void;
   render: (
     container: HTMLElement,
     options: TurnstileRenderOptions,
@@ -76,14 +75,9 @@ export const TurnstileWidget = forwardRef<
       return;
     }
 
-    let active = true;
     const container = containerRef.current;
 
-    window.turnstile.ready(() => {
-      if (!active || widgetIdRef.current || !window.turnstile) {
-        return;
-      }
-
+    if (!widgetIdRef.current) {
       widgetIdRef.current = window.turnstile.render(container, {
         sitekey: turnstileConfig.siteKey,
         action: turnstileConfig.action,
@@ -95,11 +89,9 @@ export const TurnstileWidget = forwardRef<
         "response-field": true,
         "response-field-name": "cf-turnstile-response",
       });
-    });
+    }
 
     return () => {
-      active = false;
-
       if (widgetIdRef.current && window.turnstile) {
         window.turnstile.remove(widgetIdRef.current);
         widgetIdRef.current = null;
