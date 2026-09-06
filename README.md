@@ -34,7 +34,6 @@ The remaining variables are server-only and must not use a `NEXT_PUBLIC_` prefix
 - `FORM_RESEND_API_KEY`: the server-only Resend API key used to deliver contact form enquiries
 - `FORM_RESEND_FROM_EMAIL`: an optional verified Resend sender, such as `Travis Wood Builder <contact@example.com>`; if omitted, the Resend onboarding sender is used for testing
 - `TURNSTILE_SECRET`: the server-only secret key for the existing Cloudflare Turnstile widget
-- `TURNSTILE_HOSTNAMES`: `gmfb-travis-wood-builder.vercel.app` in Production; use a comma-separated exact allowlist and never include `localhost` or `127.0.0.1` in the Production value
 
 Redeploy after adding or rotating environment variables. Configure the Payload deployment with the same `REVALIDATION_SECRET` and set `FRONTEND_REVALIDATION_URL=https://gmfb-travis-wood-builder.vercel.app/api/revalidate/payload`. Never create `NEXT_PUBLIC_REVALIDATION_SECRET`, `NEXT_PUBLIC_FORM_RESEND_API_KEY`, or `NEXT_PUBLIC_TURNSTILE_SECRET`.
 

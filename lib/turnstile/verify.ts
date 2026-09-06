@@ -1,5 +1,6 @@
 import "server-only";
 
+import { siteConfig } from "@/lib/seo/config";
 import { turnstileConfig } from "@/lib/turnstile/config";
 
 const SITEVERIFY_URL =
@@ -17,26 +18,15 @@ type VerifyTurnstileTokenOptions = {
   remoteIp?: string;
 };
 
-function getExpectedHostnames() {
-  return new Set(
-    (process.env.TURNSTILE_HOSTNAMES ?? "")
-      .split(",")
-      .map((hostname) => hostname.trim().toLowerCase())
-      .filter(Boolean),
-  );
-}
-
 export async function verifyTurnstileToken({
   token,
   remoteIp,
 }: VerifyTurnstileTokenOptions) {
   const secret = process.env.TURNSTILE_SECRET?.trim();
-  const expectedHostnames = getExpectedHostnames();
+  const expectedHostname = new URL(siteConfig.url).hostname.toLowerCase();
 
-  if (!secret || expectedHostnames.size === 0) {
-    console.error(
-      "Turnstile is missing TURNSTILE_SECRET or TURNSTILE_HOSTNAMES.",
-    );
+  if (!secret) {
+    console.error("Turnstile is missing TURNSTILE_SECRET.");
     return false;
   }
 
@@ -74,7 +64,7 @@ export async function verifyTurnstileToken({
       result.success === true &&
       result.action === turnstileConfig.action &&
       typeof result.hostname === "string" &&
-      expectedHostnames.has(result.hostname.toLowerCase())
+      result.hostname.toLowerCase() === expectedHostname
     );
   } catch {
     return false;
