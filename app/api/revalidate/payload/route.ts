@@ -121,13 +121,15 @@ export async function POST(request: Request) {
 
   if (body.collection === "pages") {
     const pageTag = CACHE_TAGS.page(body.pageSlug);
-    tags.push(pageTag);
-    paths.push(body.pagePath);
+    tags.push(pageTag, CACHE_TAGS.sitemap);
+    paths.push(body.pagePath, "/sitemap.xml");
 
     // The page data and generateMetadata call share this tag. Expiring it before
     // the path ensures that the next visit reads the current published document.
     revalidateTag(pageTag, { expire: 0 });
+    revalidateTag(CACHE_TAGS.sitemap, { expire: 0 });
     revalidatePath(body.pagePath);
+    revalidatePath("/sitemap.xml");
   } else {
     tags.push(CACHE_TAGS.shared);
     paths.push("/");

@@ -78,24 +78,18 @@ export const publicPages = {
     path: "/",
     title: siteConfig.defaultTitle,
     description: siteConfig.defaultDescription,
-    changeFrequency: "monthly",
-    priority: 1,
   },
   services: {
     path: "/services",
     title: "Residential Building Services in Whangārei",
     description:
       "Explore new builds, renovations, extensions and outdoor living services from Travis Wood Builder across Whangārei and surrounding areas.",
-    changeFrequency: "monthly",
-    priority: 0.9,
   },
   contact: {
     path: "/contact",
     title: "Contact Our Whangārei Building Team",
     description:
       "Contact Travis Wood Builder to discuss a new build, renovation, extension or outdoor living project in Whangārei and surrounding areas.",
-    changeFrequency: "yearly",
-    priority: 0.8,
   },
 } as const;
 

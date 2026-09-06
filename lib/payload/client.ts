@@ -20,6 +20,7 @@ export const PAYLOAD_REVALIDATE_SECONDS = 3600;
 export const CACHE_TAGS = {
   tenant: `tenant:${TENANT_SLUG}`,
   shared: `tenant:${TENANT_SLUG}:shared`,
+  sitemap: `tenant:${TENANT_SLUG}:sitemap`,
   page: (slug: string) => `tenant:${TENANT_SLUG}:page:${slug}`,
 } as const;
 
@@ -94,6 +95,52 @@ function getPersistentlyCachedPage(slug: string) {
 }
 
 export const getPage = cache(async (slug: string) => getPersistentlyCachedPage(slug));
+
+export type PublishedSitemapPage = Pick<CmsPage, "slug" | "path" | "updatedAt">;
+
+async function fetchPublishedSitemapPages(): Promise<PublishedSitemapPage[]> {
+  const pages: CmsPage[] = [];
+  const limit = 100;
+  let pageNumber = 1;
+  let totalDocs = 0;
+
+  do {
+    const url = buildPayloadUrl("pages", {
+      "where[tenant.slug][equals]": TENANT_SLUG,
+      "where[_status][equals]": "published",
+      depth: 0,
+      limit,
+      page: pageNumber,
+      sort: "path",
+    });
+    const response = parseListResponse(
+      await requestPayload(url),
+      isCmsPage,
+      "sitemap pages",
+    );
+
+    if (response.docs.length === 0) break;
+
+    pages.push(...response.docs);
+    totalDocs = response.totalDocs;
+    pageNumber += 1;
+  } while (pages.length < totalDocs);
+
+  return pages.map(({ slug, path, updatedAt }) => ({ slug, path, updatedAt }));
+}
+
+const getCachedPublishedSitemapPages = unstable_cache(
+  fetchPublishedSitemapPages,
+  [TENANT_SLUG, "published-sitemap-pages"],
+  {
+    revalidate: PAYLOAD_REVALIDATE_SECONDS,
+    tags: [CACHE_TAGS.tenant, CACHE_TAGS.sitemap],
+  },
+);
+
+export const getPublishedSitemapPages = cache(
+  async () => getCachedPublishedSitemapPages(),
+);
 
 async function fetchNavigation(): Promise<Navigation> {
   const url = buildPayloadUrl("navigation", {
