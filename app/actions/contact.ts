@@ -3,7 +3,6 @@
 import { Resend } from "resend";
 import { headers } from "next/headers";
 import { getSiteSettings } from "@/lib/payload/client";
-import { siteConfig } from "@/lib/seo/config";
 import { verifyTurnstileToken } from "@/lib/turnstile/verify";
 
 export type ContactFormState = {
@@ -25,25 +24,11 @@ function getField(formData: FormData, name: string) {
   return typeof value === "string" ? value.trim() : "";
 }
 
-function escapeHtml(value: string) {
-  return value.replace(
-    /[&<>"']/g,
-    (character) =>
-      ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#039;",
-      })[character] ?? character,
-  );
-}
-
 export async function submitContactForm(
   _previousState: ContactFormState,
   formData: FormData,
 ): Promise<ContactFormState> {
-  const turnstileToken = getField(formData, "cf-turnstile-response");
+  const turnstileToken = getField(formData, "turnstileToken");
   const requestHeaders = await headers();
   const remoteIp = requestHeaders
     .get("x-forwarded-for")
@@ -98,9 +83,20 @@ export async function submitContactForm(
     };
   }
 
-  const apiKey = process.env.FORM_RESEND_API_KEY;
-  if (!apiKey) {
-    console.error("Contact form is missing FORM_RESEND_API_KEY.");
+  const apiKey = process.env.RESEND_API_KEY?.trim();
+  const recipient = process.env.CONTACT_EMAIL?.trim();
+  const sender = process.env.RESEND_FROM_EMAIL?.trim();
+
+  if (
+    !apiKey ||
+    !recipient ||
+    !EMAIL_PATTERN.test(recipient) ||
+    recipient.length > 254 ||
+    !sender
+  ) {
+    console.error(
+      "Contact form is missing valid RESEND_API_KEY, CONTACT_EMAIL, or RESEND_FROM_EMAIL configuration.",
+    );
     return { status: "error", message: GENERIC_ERROR_MESSAGE };
   }
 
@@ -117,44 +113,32 @@ export async function submitContactForm(
       };
     }
 
-    const fullName = `${firstName} ${lastName}`;
-    const sender =
-      process.env.FORM_RESEND_FROM_EMAIL?.trim() ||
-      `${settings.businessName} <onboarding@resend.dev>`;
     const resend = new Resend(apiKey);
     const phoneDisplay = phone || "Not provided";
 
     const { error } = await resend.emails.send({
       from: sender,
-      to: siteConfig.business.email,
+      to: recipient,
       replyTo: email,
-      subject: `Contact Us: ${service} enquiry from ${fullName}`,
+      subject: "New website enquiry",
       text: [
-        "New website contact enquiry",
+        "New website enquiry",
         "",
-        `Name: ${fullName}`,
+        `First name: ${firstName}`,
+        `Last name: ${lastName}`,
         `Email: ${email}`,
         `Phone: ${phoneDisplay}`,
         `Service: ${service}`,
+        "Agreement: Accepted",
         "",
         "Message:",
         message,
       ].join("\n"),
-      html: `
-        <h1 style="font-family:Arial,sans-serif;font-size:24px">New website contact enquiry</h1>
-        <table cellpadding="6" cellspacing="0" style="font-family:Arial,sans-serif;font-size:16px">
-          <tr><th align="left">Name</th><td>${escapeHtml(fullName)}</td></tr>
-          <tr><th align="left">Email</th><td>${escapeHtml(email)}</td></tr>
-          <tr><th align="left">Phone</th><td>${escapeHtml(phoneDisplay)}</td></tr>
-          <tr><th align="left">Service</th><td>${escapeHtml(service)}</td></tr>
-        </table>
-        <h2 style="font-family:Arial,sans-serif;font-size:18px">Message</h2>
-        <p style="font-family:Arial,sans-serif;font-size:16px;white-space:pre-wrap">${escapeHtml(message)}</p>
-      `,
     });
 
     if (error) {
-      throw new Error(error.message);
+      console.error("Resend rejected the contact form email:", error.message);
+      return { status: "error", message: GENERIC_ERROR_MESSAGE };
     }
 
     return {

@@ -138,7 +138,7 @@ export const TurnstileWidget = forwardRef<
       <input
         ref={responseInputRef}
         type="hidden"
-        name="cf-turnstile-response"
+        name="turnstileToken"
       />
       {scriptFailed ? (
         <p className="text-sm text-red-300" role="alert">

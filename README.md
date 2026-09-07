@@ -31,11 +31,12 @@ The remaining variables are server-only and must not use a `NEXT_PUBLIC_` prefix
 - `PAYLOAD_URL`: `https://payload.vyomeshj.com`
 - `PAYLOAD_PREVIEW_TOKEN`: a server-only Payload API token, only if an authenticated preview entry point is added
 - `REVALIDATION_SECRET`: a random value of at least 32 characters, shared only with the Payload server hook
-- `FORM_RESEND_API_KEY`: the server-only Resend API key used to deliver contact form enquiries
-- `FORM_RESEND_FROM_EMAIL`: an optional verified Resend sender, such as `Travis Wood Builder <contact@example.com>`; if omitted, the Resend onboarding sender is used for testing
+- `RESEND_API_KEY`: the server-only Resend API key used to deliver contact form enquiries
+- `CONTACT_EMAIL`: the fixed server-side inbox that receives contact form enquiries
+- `RESEND_FROM_EMAIL`: `onboarding@resend.dev` for initial testing, then a sender on your verified domain such as `Website Enquiries <forms@yourdomain.com>`
 - `TURNSTILE_SECRET`: the server-only secret key for the existing Cloudflare Turnstile widget
 
-Redeploy after adding or rotating environment variables. Configure the Payload deployment with the same `REVALIDATION_SECRET` and set `FRONTEND_REVALIDATION_URL=https://gmfb-travis-wood-builder.vercel.app/api/revalidate/payload`. Never create `NEXT_PUBLIC_REVALIDATION_SECRET`, `NEXT_PUBLIC_FORM_RESEND_API_KEY`, or `NEXT_PUBLIC_TURNSTILE_SECRET`.
+Redeploy after adding or rotating environment variables. Configure the Payload deployment with the same `REVALIDATION_SECRET` and set `FRONTEND_REVALIDATION_URL=https://gmfb-travis-wood-builder.vercel.app/api/revalidate/payload`. Never create `NEXT_PUBLIC_REVALIDATION_SECRET`, `NEXT_PUBLIC_RESEND_API_KEY`, or `NEXT_PUBLIC_TURNSTILE_SECRET`.
 
 ## Payload hook installation
 
