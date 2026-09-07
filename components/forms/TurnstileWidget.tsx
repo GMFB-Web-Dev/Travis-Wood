@@ -49,10 +49,10 @@ export const TurnstileWidget = forwardRef<
   TurnstileWidgetProps
 >(function TurnstileWidget({ onVerifiedChange }, ref) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const responseInputRef = useRef<HTMLInputElement>(null);
   const widgetIdRef = useRef<string | null>(null);
   const [scriptReady, setScriptReady] = useState(false);
   const [scriptFailed, setScriptFailed] = useState(false);
-  const [turnstileToken, setTurnstileToken] = useState("");
 
   useImperativeHandle(
     ref,
@@ -64,7 +64,9 @@ export const TurnstileWidget = forwardRef<
           window.turnstile.reset(widgetId);
         }
 
-        setTurnstileToken("");
+        if (responseInputRef.current) {
+          responseInputRef.current.value = "";
+        }
         onVerifiedChange(false);
       },
     }),
@@ -85,15 +87,21 @@ export const TurnstileWidget = forwardRef<
         theme: "dark",
         size: "flexible",
         callback: (token) => {
-          setTurnstileToken(token);
-          onVerifiedChange(true);
+          if (responseInputRef.current) {
+            responseInputRef.current.value = token;
+          }
+          onVerifiedChange(Boolean(token));
         },
         "error-callback": () => {
-          setTurnstileToken("");
+          if (responseInputRef.current) {
+            responseInputRef.current.value = "";
+          }
           onVerifiedChange(false);
         },
         "expired-callback": () => {
-          setTurnstileToken("");
+          if (responseInputRef.current) {
+            responseInputRef.current.value = "";
+          }
           onVerifiedChange(false);
         },
         "response-field": false,
@@ -120,16 +128,17 @@ export const TurnstileWidget = forwardRef<
         }}
         onError={() => {
           setScriptFailed(true);
-          setTurnstileToken("");
+          if (responseInputRef.current) {
+            responseInputRef.current.value = "";
+          }
           onVerifiedChange(false);
         }}
       />
       <div ref={containerRef} aria-label="Cloudflare security check" />
       <input
+        ref={responseInputRef}
         type="hidden"
         name="cf-turnstile-response"
-        value={turnstileToken}
-        readOnly
       />
       {scriptFailed ? (
         <p className="text-sm text-red-300" role="alert">
