@@ -15,11 +15,10 @@ type TurnstileRenderOptions = {
   action: string;
   theme: "dark";
   size: "flexible";
-  callback: () => void;
+  callback: (token: string) => void;
   "error-callback": () => void;
   "expired-callback": () => void;
-  "response-field": true;
-  "response-field-name": "cf-turnstile-response";
+  "response-field": false;
 };
 
 type TurnstileApi = {
@@ -53,6 +52,7 @@ export const TurnstileWidget = forwardRef<
   const widgetIdRef = useRef<string | null>(null);
   const [scriptReady, setScriptReady] = useState(false);
   const [scriptFailed, setScriptFailed] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState("");
 
   useImperativeHandle(
     ref,
@@ -64,6 +64,7 @@ export const TurnstileWidget = forwardRef<
           window.turnstile.reset(widgetId);
         }
 
+        setTurnstileToken("");
         onVerifiedChange(false);
       },
     }),
@@ -83,11 +84,19 @@ export const TurnstileWidget = forwardRef<
         action: turnstileConfig.action,
         theme: "dark",
         size: "flexible",
-        callback: () => onVerifiedChange(true),
-        "error-callback": () => onVerifiedChange(false),
-        "expired-callback": () => onVerifiedChange(false),
-        "response-field": true,
-        "response-field-name": "cf-turnstile-response",
+        callback: (token) => {
+          setTurnstileToken(token);
+          onVerifiedChange(true);
+        },
+        "error-callback": () => {
+          setTurnstileToken("");
+          onVerifiedChange(false);
+        },
+        "expired-callback": () => {
+          setTurnstileToken("");
+          onVerifiedChange(false);
+        },
+        "response-field": false,
       });
     }
 
@@ -111,10 +120,17 @@ export const TurnstileWidget = forwardRef<
         }}
         onError={() => {
           setScriptFailed(true);
+          setTurnstileToken("");
           onVerifiedChange(false);
         }}
       />
       <div ref={containerRef} aria-label="Cloudflare security check" />
+      <input
+        type="hidden"
+        name="cf-turnstile-response"
+        value={turnstileToken}
+        readOnly
+      />
       {scriptFailed ? (
         <p className="text-sm text-red-300" role="alert">
           The security check could not load. Please refresh and try again.
