@@ -9,28 +9,31 @@ type ContactPageHeroProps = {
   block: HeroSectionBlock;
   navigation: Navigation;
   settings: SiteSettings;
+  imageTitle: string;
+  imageAlt: string;
 };
 
-export function ContactPageHero({ block, navigation, settings }: ContactPageHeroProps) {
+export function ContactPageHero({
+  block,
+  navigation,
+  settings,
+  imageTitle,
+  imageAlt,
+}: ContactPageHeroProps) {
   const buttons = block.buttons.length ? block.buttons : [settings.primaryCTA];
 
   return (
     <section id="top" className="relative min-h-[620px] overflow-hidden lg:h-[634px] lg:min-h-0">
       <Image
         src={requireMediaUrl(block.backgroundImage, "contact hero", "hero")}
-        alt={
-          block.backgroundAlt ||
-          getMediaAlt(
-            block.backgroundImage,
-            "Residential building project by Travis Wood Builder in Whangārei",
-          )
-        }
+        alt={imageAlt}
+        title={imageTitle}
         fill
         priority
         sizes="100vw"
         className="object-cover object-center"
       />
-      <div className="absolute inset-0 bg-black/30" />
+      <div className="pointer-events-none absolute inset-0 bg-black/30" />
       <Navbar
         activePath="/contact"
         links={navigation.headerLinks}

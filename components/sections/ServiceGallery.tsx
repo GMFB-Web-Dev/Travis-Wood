@@ -69,7 +69,7 @@ export function ServiceGallery({
 
   useEffect(() => {
     if (paused) return;
-    const timer = window.setInterval(() => goToPage(activePage + 1), 5000);
+    const timer = window.setInterval(() => goToPage(activePage + 1), 3500);
     return () => window.clearInterval(timer);
   }, [activePage, goToPage, paused]);
 
@@ -95,11 +95,7 @@ export function ServiceGallery({
             <div
               key={`${image.src}-${index}`}
               data-service-gallery-card
-              className={`relative aspect-square w-full shrink-0 snap-start overflow-hidden lg:w-[416px] ${
-                index % 2 === 0
-                  ? "rounded-tl-[80px] sm:rounded-tl-[100px]"
-                  : "rounded-br-[80px] sm:rounded-br-[100px]"
-              }`}
+              className="relative aspect-square w-full shrink-0 snap-start overflow-hidden rounded-br-[80px] rounded-tl-[80px] sm:rounded-br-[100px] sm:rounded-tl-[100px] lg:w-[416px]"
             >
               <Image
                 src={image.src}

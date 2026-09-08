@@ -13,6 +13,7 @@ import {
   requireUiAsset,
 } from "@/lib/payload/client";
 import { getPageMetadata } from "@/lib/payload/metadata";
+import { publicPages } from "@/lib/seo/config";
 import { getBreadcrumbJsonLd, getServicesJsonLd } from "@/lib/seo/structured-data";
 
 export const revalidate = 3600;
@@ -30,7 +31,6 @@ export default async function ServicesPage() {
   const hero = getBlock(page, "heroSection");
   const services = getBlocks(page, "serviceDetail");
   const contact = getBlock(page, "contactSection");
-  const arrowIcon = requireUiAsset(settings, "arrow");
   const previousIcon = requireUiAsset(settings, "previous");
   const nextIcon = requireUiAsset(settings, "next");
 
@@ -43,19 +43,24 @@ export default async function ServicesPage() {
       <JsonLd data={getBreadcrumbJsonLd({ name: "Services", path: "/services" })} />
       <JsonLd data={getServicesJsonLd(services)} />
       <main className="overflow-hidden bg-black">
-        <ServicesPageHero block={hero} navigation={navigation} settings={settings} />
+        <ServicesPageHero
+          block={hero}
+          navigation={navigation}
+          settings={settings}
+          imageTitle={publicPages.services.featureImage.title}
+          imageAlt={publicPages.services.featureImage.alt}
+        />
         {services.map((service) => (
           <ServiceDetailSection
             key={service.id || service.anchor || service.heading}
             block={service}
-            arrowIcon={arrowIcon}
             previousIcon={previousIcon}
             nextIcon={nextIcon}
           />
         ))}
         <ContactSection block={contact} settings={settings} />
       </main>
-      <Footer navigation={navigation} settings={settings} />
+      <Footer activePath="/services" navigation={navigation} settings={settings} />
     </>
   );
 }

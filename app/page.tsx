@@ -18,6 +18,7 @@ import {
   requireUiAsset,
 } from "@/lib/payload/client";
 import { getPageMetadata } from "@/lib/payload/metadata";
+import { publicPages } from "@/lib/seo/config";
 
 export const revalidate = 3600;
 
@@ -45,9 +46,15 @@ export default async function Home() {
   return (
     <>
       <main className="overflow-hidden bg-black">
-        <HeroSection block={hero} navigation={navigation} settings={settings} />
+        <HeroSection
+          block={hero}
+          navigation={navigation}
+          settings={settings}
+          imageTitle={publicPages.home.featureImage.title}
+          imageAlt={publicPages.home.featureImage.alt}
+        />
         <AboutSection block={about} />
-        <ServicesSection block={services} arrowIcon={requireUiAsset(settings, "arrow")} />
+        <ServicesSection block={services} />
         <ValuesSection block={values} />
         <WorkGallery
           eyebrow={gallery.eyebrow}
@@ -72,7 +79,7 @@ export default async function Home() {
         />
         <ContactSection block={contact} settings={settings} />
       </main>
-      <Footer navigation={navigation} settings={settings} />
+      <Footer activePath="/" navigation={navigation} settings={settings} />
     </>
   );
 }

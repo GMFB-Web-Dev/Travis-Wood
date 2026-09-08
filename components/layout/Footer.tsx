@@ -2,15 +2,46 @@ import Image from "next/image";
 import Link from "next/link";
 import { BrandLogo } from "@/components/ui/BrandLogo";
 import { getMediaAlt, requireMediaUrl } from "@/lib/payload/client";
-import type { Navigation, SiteSettings } from "@/lib/payload/types";
+import type { CmsLink, Navigation, SiteSettings } from "@/lib/payload/types";
 import { SiteContainer } from "./SiteContainer";
 
+function FooterNavLink({ link, isActive }: { link: CmsLink; isActive: boolean }) {
+  const className = `group relative text-lg uppercase leading-7 transition-[color,font-weight] hover:font-normal hover:text-brand-gold lg:text-xl ${
+    isActive ? "font-normal text-brand-gold" : "font-light text-white"
+  }`;
+  const content = (
+    <>
+      {link.label}
+      <span
+        className={`absolute inset-x-0 -bottom-1 h-px origin-left bg-brand-gold transition-transform ${
+          isActive ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
+        }`}
+      />
+    </>
+  );
+
+  if (link.url.includes("#")) {
+    return (
+      <a href={link.url} className={className}>
+        {content}
+      </a>
+    );
+  }
+
+  return (
+    <Link href={link.url} className={className}>
+      {content}
+    </Link>
+  );
+}
+
 type FooterProps = {
+  activePath: "/" | "/contact" | "/services";
   navigation: Navigation;
   settings: SiteSettings;
 };
 
-export function Footer({ navigation, settings }: FooterProps) {
+export function Footer({ activePath, navigation, settings }: FooterProps) {
   const logo = {
     src: requireMediaUrl(settings.logo, "site logo"),
     alt: getMediaAlt(settings.logo, settings.businessName),
@@ -35,17 +66,17 @@ export function Footer({ navigation, settings }: FooterProps) {
             businessName={settings.businessName}
           />
           <nav aria-label="Footer navigation" className="flex flex-wrap justify-center gap-x-8 gap-y-3">
-            {navigation.footerLinks.map((link, index) => (
-              <Link
-                key={`${link.url}-${link.label}`}
-                href={link.url}
-                className={`text-lg uppercase leading-7 hover:text-brand-gold lg:text-xl ${
-                  index === 0 ? "text-brand-gold" : "font-light text-white"
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
+            {navigation.footerLinks.map((link) => {
+              const isActive = link.url === activePath;
+
+              return (
+                <FooterNavLink
+                  key={`${link.url}-${link.label}`}
+                  link={link}
+                  isActive={isActive}
+                />
+              );
+            })}
           </nav>
           <div className="flex items-center gap-2">
             {socialIcons.map((social) => (
@@ -68,13 +99,13 @@ export function Footer({ navigation, settings }: FooterProps) {
             {legalLinks.length ? (
               <div className="flex flex-wrap justify-center gap-6">
                 {legalLinks.map((link) => (
-                <Link
-                  key={`${link.url}-${link.label}`}
-                  href={link.url}
-                  className="underline underline-offset-4"
-                >
-                  {link.label}
-                </Link>
+                  <Link
+                    key={`${link.url}-${link.label}`}
+                    href={link.url}
+                    className="underline underline-offset-4"
+                  >
+                    {link.label}
+                  </Link>
                 ))}
               </div>
             ) : null}

@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { SiteContainer } from "@/components/layout/SiteContainer";
 import { getMediaAlt, requireMediaUrl } from "@/lib/payload/client";
@@ -8,14 +7,12 @@ import { ServiceGallery } from "./ServiceGallery";
 
 type ServiceDetailSectionProps = {
   block: ServiceDetailBlock;
-  arrowIcon: string;
   previousIcon: string;
   nextIcon: string;
 };
 
 export function ServiceDetailSection({
   block,
-  arrowIcon,
   previousIcon,
   nextIcon,
 }: ServiceDetailSectionProps) {
@@ -63,10 +60,9 @@ export function ServiceDetailSection({
             <p className="mt-8">{body}</p>
             <Link
               href={cta.url}
-              className="mt-8 inline-flex min-h-12 items-center gap-3 rounded-br-[1000px] rounded-tl-[1000px] border border-brand-gold px-8 py-3 text-base font-normal uppercase text-white transition-colors hover:bg-brand-gold hover:text-black"
+              className="mt-8 inline-flex min-h-12 items-center rounded-br-[1000px] rounded-tl-[1000px] border border-brand-gold px-8 py-3 text-base font-normal uppercase text-white transition-colors hover:bg-brand-gold hover:text-black"
             >
               {cta.label}
-              <Image src={arrowIcon} alt="" width={22} height={22} unoptimized />
             </Link>
           </div>
         </SiteContainer>

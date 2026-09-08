@@ -68,12 +68,12 @@ export async function getPageMetadata(slug: PublicPageSlug): Promise<Metadata> {
         url: featuredImage,
         width: heroImage?.width || media?.width || undefined,
         height: heroImage?.height || media?.height || undefined,
-        alt: media?.alt || siteConfig.socialImage.alt,
+        alt: pageConfig.featureImage.alt,
       }
     : siteConfig.socialImage;
 
   return {
-    title: slug === "home" ? { absolute: pageConfig.title } : pageConfig.title,
+    title: { absolute: pageConfig.title },
     description: pageConfig.description,
     alternates: { canonical },
     openGraph: {

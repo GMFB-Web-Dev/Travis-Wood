@@ -39,20 +39,25 @@ export function TestimonialsSection({
   };
 
   return (
-    <section className="bg-black py-10 lg:min-h-[403px] lg:py-8">
+    <section className="bg-black py-10 [@media_(orientation:landscape)_and_(max-height:500px)]:py-4 lg:min-h-[403px] lg:py-8">
       <SiteContainer>
         <div
-          className="relative flex min-h-[430px] items-center overflow-hidden rounded-br-[110px] rounded-tl-[110px] bg-brand-navy/65 py-14 sm:min-h-[360px] sm:rounded-br-[1000px] sm:rounded-tl-[1000px] sm:py-12"
+          className="relative flex min-h-[430px] items-center py-14 [@media_(orientation:landscape)_and_(max-height:500px)]:min-h-[320px] [@media_(orientation:landscape)_and_(max-height:500px)]:py-12 sm:min-h-[360px] sm:py-12"
           onMouseEnter={() => setPaused(true)}
           onMouseLeave={() => setPaused(false)}
           onFocusCapture={() => setPaused(true)}
           onBlurCapture={() => setPaused(false)}
         >
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 rounded-br-[110px] rounded-tl-[110px] bg-brand-navy/65 [@media_(orientation:landscape)_and_(max-height:500px)]:rounded-br-[90px] [@media_(orientation:landscape)_and_(max-height:500px)]:rounded-tl-[90px] sm:rounded-br-[1000px] sm:rounded-tl-[1000px]"
+          />
+
           <button
             type="button"
             aria-label="Previous testimonial"
             onClick={() => goToSlide(activeSlide - 1)}
-            className="absolute left-3 top-1/2 z-10 flex size-11 -translate-y-1/2 items-center justify-center rounded-full border border-brand-gold bg-brand-navy/80 transition-colors hover:bg-brand-gold/15 sm:left-9 sm:size-12 lg:left-[70px]"
+            className="absolute left-3 top-1/2 z-20 flex size-11 -translate-y-1/2 items-center justify-center rounded-full border border-brand-gold bg-brand-navy transition-colors hover:bg-brand-gold/15 sm:left-9 sm:size-12 lg:left-[70px]"
           >
             <Image src={previousIcon} alt="" width={26} height={26} unoptimized />
           </button>
@@ -60,18 +65,18 @@ export function TestimonialsSection({
           <div
             ref={viewport}
             onScroll={syncActiveSlide}
-            className="flex w-full snap-x snap-mandatory overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            className="relative z-10 flex w-full snap-x snap-mandatory overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
             {testimonials.map((testimonial, index) => (
               <figure
-                key={testimonial.author}
-                className="flex w-full shrink-0 snap-center flex-col justify-center px-[66px] text-center sm:px-28 lg:px-[190px]"
+                key={`${testimonial.author}-${index}`}
+                className="flex w-full shrink-0 snap-center flex-col justify-center px-[66px] py-4 text-center [@media_(orientation:landscape)_and_(max-height:500px)]:px-24 [@media_(orientation:landscape)_and_(max-height:500px)]:pb-12 sm:px-28 lg:px-[190px]"
                 aria-hidden={activeSlide !== index}
               >
-                <blockquote className="mx-auto max-w-[830px] text-[15px] font-normal leading-6 tracking-[-0.02em] text-white sm:text-base sm:leading-7 lg:text-lg">
+                <blockquote className="mx-auto max-w-[830px] text-[15px] font-normal leading-6 tracking-[-0.02em] text-white [@media_(orientation:landscape)_and_(max-height:500px)]:max-w-[68vw] [@media_(orientation:landscape)_and_(max-height:500px)]:text-sm [@media_(orientation:landscape)_and_(max-height:500px)]:leading-6 sm:text-base sm:leading-7 lg:text-lg">
                   <p>{testimonial.quote}</p>
                 </blockquote>
-                <figcaption className="mt-7 text-base font-semibold leading-7 text-white sm:text-xl">
+                <figcaption className="mt-7 text-base font-semibold leading-7 text-white [@media_(orientation:landscape)_and_(max-height:500px)]:mt-4 [@media_(orientation:landscape)_and_(max-height:500px)]:text-sm sm:text-xl">
                   {testimonial.author}
                 </figcaption>
               </figure>
@@ -82,15 +87,15 @@ export function TestimonialsSection({
             type="button"
             aria-label="Next testimonial"
             onClick={() => goToSlide(activeSlide + 1)}
-            className="absolute right-3 top-1/2 z-10 flex size-11 -translate-y-1/2 items-center justify-center rounded-full border border-brand-gold bg-brand-navy/80 transition-colors hover:bg-brand-gold/15 sm:right-9 sm:size-12 lg:right-[70px]"
+            className="absolute right-3 top-1/2 z-20 flex size-11 -translate-y-1/2 items-center justify-center rounded-full border border-brand-gold bg-brand-navy transition-colors hover:bg-brand-gold/15 sm:right-9 sm:size-12 lg:right-[70px]"
           >
             <Image src={nextIcon} alt="" width={26} height={26} unoptimized />
           </button>
 
-          <div className="absolute bottom-9 left-1/2 z-10 flex -translate-x-1/2 gap-2" aria-label={`Testimonial ${activeSlide + 1} of ${testimonials.length}`}>
+          <div className="absolute bottom-9 left-1/2 z-20 flex -translate-x-1/2 gap-2 [@media_(orientation:landscape)_and_(max-height:500px)]:bottom-5" aria-label={`Testimonial ${activeSlide + 1} of ${testimonials.length}`}>
             {testimonials.map((testimonial, index) => (
               <button
-                key={testimonial.author}
+                key={`${testimonial.author}-${index}`}
                 type="button"
                 onClick={() => goToSlide(index)}
                 aria-label={`Show testimonial ${index + 1}`}

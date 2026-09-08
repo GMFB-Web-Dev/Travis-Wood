@@ -6,6 +6,7 @@ import { ContactPageHero } from "@/components/sections/ContactPageHero";
 import { ContactPageSection } from "@/components/sections/ContactPageSection";
 import { getBlock, getNavigation, getPage, getSiteSettings } from "@/lib/payload/client";
 import { getPageMetadata } from "@/lib/payload/metadata";
+import { publicPages } from "@/lib/seo/config";
 import { getBreadcrumbJsonLd } from "@/lib/seo/structured-data";
 
 export const revalidate = 3600;
@@ -22,17 +23,22 @@ export default async function ContactPage() {
   ]);
   const hero = getBlock(page, "heroSection");
   const contact = getBlock(page, "contactSection");
-  const map = getBlock(page, "mapSection");
 
   return (
     <>
       <JsonLd data={getBreadcrumbJsonLd({ name: "Contact", path: "/contact" })} />
       <main className="overflow-hidden bg-black">
-        <ContactPageHero block={hero} navigation={navigation} settings={settings} />
+        <ContactPageHero
+          block={hero}
+          navigation={navigation}
+          settings={settings}
+          imageTitle={publicPages.contact.featureImage.title}
+          imageAlt={publicPages.contact.featureImage.alt}
+        />
         <ContactPageSection block={contact} settings={settings} />
-        <ContactMapSection block={map} />
+        <ContactMapSection />
       </main>
-      <Footer navigation={navigation} settings={settings} />
+      <Footer activePath="/contact" navigation={navigation} settings={settings} />
     </>
   );
 }

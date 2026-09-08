@@ -45,17 +45,16 @@ export const siteConfig = {
     email: "traviswoodbuild@gmail.com",
     emailHref: "mailto:traviswoodbuild@gmail.com",
     address: {
-      streetAddress: "386A Pataua North Road, Whareora",
       addressLocality: "Whangārei",
-      postalCode: "0175",
+      addressRegion: "Northland",
       addressCountry: "NZ",
     },
-    displayAddress:
-      "386A Pataua North Road, Whareora, Whangārei 0175, New Zealand",
+    displayLocation: "Whangārei",
     facebookUrl: "https://www.facebook.com/profile.php?id=61566712083135",
-    // The lowercase short link supplied for this project returns 404. This is the
-    // working, case-sensitive URL already published in the website CMS.
-    mapUrl: "https://maps.app.goo.gl/jvwdSMkDjaRZmKyP6",
+    mapUrl:
+      "https://www.google.com/maps/search/?api=1&query=Whang%C4%81rei%2C%20New%20Zealand",
+    mapEmbedUrl:
+      "https://www.google.com/maps?q=Whang%C4%81rei%2C%20New%20Zealand&output=embed",
     areaServed: "Whangārei and surrounding areas",
     openingHours: [
       {
@@ -78,18 +77,30 @@ export const publicPages = {
     path: "/",
     title: siteConfig.defaultTitle,
     description: siteConfig.defaultDescription,
+    featureImage: {
+      title: "Residential building project by Travis Wood Builder in Whangārei",
+      alt: "Residential building project by Travis Wood Builder in Whangārei, showcasing new builds, renovations, extensions and outdoor living work",
+    },
   },
   services: {
     path: "/services",
-    title: "Residential Building Services in Whangārei",
+    title: "Building Services Whangārei | Travis Wood Builder",
     description:
-      "Explore new builds, renovations, extensions and outdoor living services from Travis Wood Builder across Whangārei and surrounding areas.",
+      "Explore residential building services from Travis Wood Builder, including new builds, renovations, extensions and outdoor living across Whangārei.",
+    featureImage: {
+      title: "Residential building services by Travis Wood Builder in Whangārei",
+      alt: "Residential building services by Travis Wood Builder in Whangārei, including new builds, renovations, extensions and outdoor living",
+    },
   },
   contact: {
     path: "/contact",
-    title: "Contact Our Whangārei Building Team",
+    title: "Contact Travis Wood Builder | Whangārei Builder",
     description:
-      "Contact Travis Wood Builder to discuss a new build, renovation, extension or outdoor living project in Whangārei and surrounding areas.",
+      "Get in touch with Travis Wood Builder to discuss new builds, renovations, extensions or outdoor living projects across Whangārei and surrounding areas.",
+    featureImage: {
+      title: "Contact Travis Wood Builder for residential building projects in Whangārei",
+      alt: "Contact Travis Wood Builder in Whangārei to discuss new builds, renovations, extensions and outdoor living projects",
+    },
   },
 } as const;
 
@@ -110,8 +121,7 @@ export function isProductionDeployment() {
 }
 
 export function getFullPageTitle(slug: PublicPageSlug) {
-  const page = publicPages[slug];
-  return slug === "home" ? page.title : `${page.title} | ${siteConfig.name}`;
+  return publicPages[slug].title;
 }
 
 export function getBusinessContactDetail(
@@ -133,7 +143,7 @@ export function getBusinessContactDetail(
     case "area":
     case "address":
       return {
-        value: siteConfig.business.displayAddress,
+        value: siteConfig.business.displayLocation,
         url: siteConfig.business.mapUrl,
       };
     default:

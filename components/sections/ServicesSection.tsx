@@ -12,7 +12,6 @@ type ServiceCardProps = {
   imageAlt: string;
   href: string;
   linkLabel: string;
-  arrowIcon: string;
   layout: "new-builds" | "outdoor" | "renovations";
 };
 
@@ -23,7 +22,6 @@ function ServiceCard({
   imageAlt,
   href,
   linkLabel,
-  arrowIcon,
   layout,
 }: ServiceCardProps) {
   const outerCorners = {
@@ -42,22 +40,38 @@ function ServiceCard({
         <Image src={image} alt={imageAlt} fill sizes="(max-width: 1024px) 100vw, 50vw" className="object-cover" />
       </div>
       <div
-        className={`flex flex-col justify-center gap-4 border-[0.5px] border-l-0 border-brand-gold p-6 lg:min-h-[368px] ${contentCorners}`}
+        className={`flex flex-col justify-center gap-4 border border-brand-gold p-6 lg:min-h-[368px] lg:border-[0.5px] lg:border-l-0 ${contentCorners}`}
       >
         <h3 className="text-[clamp(2rem,3.2vw,2.5rem)] font-medium uppercase leading-[1.2] tracking-[0.05em] text-white">
           {title}
         </h3>
         <p className="text-base font-light leading-6 text-white">{description}</p>
-        <Link href={href} className="mt-2 inline-flex items-center gap-2 self-start text-base uppercase text-white hover:text-brand-gold">
+        <Link
+          href={href}
+          className="mt-2 inline-flex items-center gap-2 self-start text-base uppercase text-white transition-colors hover:text-brand-gold focus-visible:text-brand-gold"
+        >
           {linkLabel}
-          <Image src={arrowIcon} alt="" width={22} height={22} unoptimized />
+          <svg
+            viewBox="0 0 22 22"
+            className="size-[22px] shrink-0"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M5 11h12M11 5l6 6-6 6"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
         </Link>
       </div>
     </article>
   );
 }
 
-export function ServicesSection({ block, arrowIcon }: { block: ServicesGridBlock; arrowIcon: string }) {
+export function ServicesSection({ block }: { block: ServicesGridBlock }) {
   const layouts = ["new-builds", "outdoor", "renovations"] as const;
 
   return (
@@ -77,7 +91,6 @@ export function ServicesSection({ block, arrowIcon }: { block: ServicesGridBlock
               }
               href={service.url}
               linkLabel={service.linkLabel}
-              arrowIcon={arrowIcon}
               layout={layouts[index] || "renovations"}
             />
           ))}

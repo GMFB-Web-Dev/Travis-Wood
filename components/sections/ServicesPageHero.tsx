@@ -9,28 +9,31 @@ type ServicesPageHeroProps = {
   block: HeroSectionBlock;
   navigation: Navigation;
   settings: SiteSettings;
+  imageTitle: string;
+  imageAlt: string;
 };
 
-export function ServicesPageHero({ block, navigation, settings }: ServicesPageHeroProps) {
+export function ServicesPageHero({
+  block,
+  navigation,
+  settings,
+  imageTitle,
+  imageAlt,
+}: ServicesPageHeroProps) {
   const buttons = block.buttons.length ? block.buttons : [settings.primaryCTA];
 
   return (
     <section id="top" className="relative min-h-[620px] overflow-hidden lg:h-[634px] lg:min-h-0">
       <Image
         src={requireMediaUrl(block.backgroundImage, "services hero", "hero")}
-        alt={
-          block.backgroundAlt ||
-          getMediaAlt(
-            block.backgroundImage,
-            "Residential construction project by Travis Wood Builder in Whangārei",
-          )
-        }
+        alt={imageAlt}
+        title={imageTitle}
         fill
         priority
         sizes="100vw"
         className="object-cover object-center"
       />
-      <div className="absolute inset-0 bg-black/40" />
+      <div className="pointer-events-none absolute inset-0 bg-black/40" />
       <Navbar
         activePath="/services"
         links={navigation.headerLinks}

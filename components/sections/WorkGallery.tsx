@@ -66,7 +66,7 @@ export function WorkGallery({
 
   useEffect(() => {
     if (hovered) return;
-    const timer = window.setInterval(() => goToPage(activePage + 1), 4500);
+    const timer = window.setInterval(() => goToPage(activePage + 1), 3150);
     return () => window.clearInterval(timer);
   }, [activePage, goToPage, hovered]);
 
@@ -88,9 +88,9 @@ export function WorkGallery({
           onMouseLeave={() => setHovered(false)}
           className="mt-8 flex snap-x snap-mandatory gap-8 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:mt-2"
         >
-          {projects.map((project) => (
+          {projects.map((project, index) => (
             <div
-              key={project.src}
+              key={`${project.src}-${index}`}
               data-gallery-card
               className="relative aspect-square w-full shrink-0 snap-start overflow-hidden rounded-br-[80px] rounded-tl-[80px] sm:rounded-br-[100px] sm:rounded-tl-[100px] lg:w-[416px]"
             >
