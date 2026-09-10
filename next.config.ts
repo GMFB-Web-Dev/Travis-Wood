@@ -16,12 +16,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "s3.vyomeshj.com",
-        pathname: "/payload-media/**",
-      },
-      {
-        protocol: "https",
-        hostname: "media.vyomeshj.com",
+        hostname: "payload.gmfb.co.nz",
         pathname: "/**",
       },
     ],
