@@ -31,8 +31,8 @@ function ServiceCard({
   }[layout];
   const contentCorners =
     layout === "new-builds"
-      ? "rounded-br-[80px] lg:rounded-br-none lg:rounded-tr-[100px]"
-      : "rounded-br-[80px] lg:rounded-br-[100px]";
+      ? "rounded-bl-[80px] rounded-br-[80px] lg:rounded-bl-none lg:rounded-br-none lg:rounded-tr-[100px]"
+      : "rounded-bl-[80px] rounded-br-[80px] lg:rounded-bl-none lg:rounded-br-[100px]";
 
   return (
     <article className={`group grid overflow-hidden bg-black lg:grid-cols-2 ${outerCorners}`}>

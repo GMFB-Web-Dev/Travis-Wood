@@ -55,7 +55,10 @@ export function HeroSection({
           </p>
           <div className="mt-10 flex flex-wrap gap-4">
             {buttons.map((button) => (
-              <LinkButton key={`${button.url}-${button.label}`} href={button.url}>
+              <LinkButton
+                key={`${button.url}-${button.label}`}
+                href={button.label.trim().toLowerCase() === "services" ? "/services" : button.url}
+              >
                 {button.label}
               </LinkButton>
             ))}
