@@ -16,8 +16,8 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "payload.gmfb.co.nz",
-        pathname: "/**",
+        hostname: "media.gmfb.co.nz",
+        pathname: "/media/**",
       },
     ],
   },

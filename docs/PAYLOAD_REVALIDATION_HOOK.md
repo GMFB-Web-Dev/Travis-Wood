@@ -20,7 +20,7 @@ Page metadata reads the same tagged published page data, so page-tag invalidatio
 Set these server-only variables in Vercel Production (and Preview when webhook testing against previews):
 
 ```dotenv
-PAYLOAD_URL=https://payload.vyomeshj.com
+PAYLOAD_URL=https://payload.gmfb.co.nz
 REVALIDATION_SECRET=the-same-long-random-secret-used-by-payload
 ```
 

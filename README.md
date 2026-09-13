@@ -28,7 +28,7 @@ Add these variables in Vercel. Redeploy after changing them.
 
 The remaining variables are server-only and must not use a `NEXT_PUBLIC_` prefix:
 
-- `PAYLOAD_URL`: `https://payload.vyomeshj.com`
+- `PAYLOAD_URL`: `https://payload.gmfb.co.nz`
 - `PAYLOAD_PREVIEW_TOKEN`: a server-only Payload API token, only if an authenticated preview entry point is added
 - `REVALIDATION_SECRET`: a random value of at least 32 characters, shared only with the Payload server hook
 - `RESEND_API_KEY`: the server-only Resend API key used to deliver contact form enquiries

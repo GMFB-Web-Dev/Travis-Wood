@@ -29,12 +29,12 @@ export const siteConfig = {
   locale: "en_NZ",
   language: "en-NZ",
   socialImage: {
-    url: "https://media.vyomeshj.com/media/gallery-3%20copy-1600x900.png",
+    url: "https://media.gmfb.co.nz/media/gallery-3%20copy-1600x900.png",
     width: 1600,
     height: 900,
     alt: "Architectural home built by Travis Wood Builder in Whangārei",
   },
-  logoUrl: "https://media.vyomeshj.com/media/logo-lockup.png",
+  logoUrl: "https://media.gmfb.co.nz/media/logo-lockup.png",
   business: {
     schemaType: "GeneralContractor",
     description:

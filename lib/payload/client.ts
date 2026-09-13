@@ -24,7 +24,7 @@ export const CACHE_TAGS = {
   page: (slug: string) => `tenant:${TENANT_SLUG}:page:${slug}`,
 } as const;
 
-const DEFAULT_PAYLOAD_URL = "https://payload.vyomeshj.com";
+const DEFAULT_PAYLOAD_URL = "https://payload.gmfb.co.nz";
 
 type QueryValue = string | number | boolean;
 
