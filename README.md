@@ -1,4 +1,4 @@
-This is the Travis Wood Builder Next.js site. Published page content, navigation, settings, SEO, images, logos, and icons are supplied by the `travis-wood-builder` tenant in Payload CMS.
+This is the Travis Wood Builder Next.js site. Published page content, navigation, settings, SEO, feature images, logos, and icons are supplied by the `travis-wood-builder` tenant in Payload CMS. The web-optimised project gallery images live in `public/images/galleries` and are mapped in `lib/gallery-images.ts`.
 
 ## Getting Started
 

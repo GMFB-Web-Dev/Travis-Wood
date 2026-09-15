@@ -8,19 +8,21 @@ import { ServicesSection } from "@/components/sections/ServicesSection";
 import { TestimonialsSection } from "@/components/sections/TestimonialsSection";
 import { ValuesSection } from "@/components/sections/ValuesSection";
 import { WorkGallery } from "@/components/sections/WorkGallery";
+import { homeGalleryImages } from "@/lib/gallery-images";
 import {
   getBlock,
-  getMediaAlt,
   getNavigation,
   getPage,
   getSiteSettings,
-  requireMediaUrl,
   requireUiAsset,
 } from "@/lib/payload/client";
 import { getPageMetadata } from "@/lib/payload/metadata";
 import { publicPages } from "@/lib/seo/config";
 
 export const revalidate = 3600;
+
+// Keep the section ready to restore without deleting its Payload content or component.
+const SHOW_TESTIMONIALS = false;
 
 export async function generateMetadata(): Promise<Metadata> {
   return getPageMetadata("home");
@@ -59,24 +61,18 @@ export default async function Home() {
         <WorkGallery
           eyebrow={gallery.eyebrow}
           heading={gallery.heading}
-          projects={gallery.images.map((item, index) => ({
-            src: requireMediaUrl(item.image, `home gallery image ${index + 1}`, "card"),
-            alt:
-              item.alt ||
-              getMediaAlt(
-                item.image,
-                `Residential building project by Travis Wood Builder in Whangārei, image ${index + 1}`,
-              ),
-          }))}
+          projects={homeGalleryImages}
           previousIcon={previousIcon}
           nextIcon={nextIcon}
         />
         <AccreditationSection block={accreditation} />
-        <TestimonialsSection
-          testimonials={testimonials.testimonials}
-          previousIcon={previousIcon}
-          nextIcon={nextIcon}
-        />
+        {SHOW_TESTIMONIALS ? (
+          <TestimonialsSection
+            testimonials={testimonials.testimonials}
+            previousIcon={previousIcon}
+            nextIcon={nextIcon}
+          />
+        ) : null}
         <ContactSection block={contact} settings={settings} />
       </main>
       <Footer activePath="/" navigation={navigation} settings={settings} />

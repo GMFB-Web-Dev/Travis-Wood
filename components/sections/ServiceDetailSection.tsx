@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { SiteContainer } from "@/components/layout/SiteContainer";
+import { serviceGalleryImagesByAnchor } from "@/lib/gallery-images";
 import { getMediaAlt, requireMediaUrl } from "@/lib/payload/client";
 import type { ServiceDetailBlock } from "@/lib/payload/types";
 import type { ServiceGalleryImage } from "./ServiceGallery";
@@ -18,15 +19,17 @@ export function ServiceDetailSection({
 }: ServiceDetailSectionProps) {
   const { anchor, eyebrow, heading, intro, includedHeading, bullets, body, theme, cta } = block;
   const isNavy = theme === "navy";
-  const images: ServiceGalleryImage[] = block.images.map((image, index) => ({
-    src: requireMediaUrl(image.image, `${eyebrow} gallery image ${index + 1}`, "card"),
-    alt:
-      image.alt ||
-      getMediaAlt(
-        image.image,
-        `${eyebrow} project by Travis Wood Builder in Whangārei, image ${index + 1}`,
-      ),
-  }));
+  const images: ServiceGalleryImage[] =
+    (anchor && serviceGalleryImagesByAnchor[anchor]) ||
+    block.images.map((image, index) => ({
+      src: requireMediaUrl(image.image, `${eyebrow} gallery image ${index + 1}`, "card"),
+      alt:
+        image.alt ||
+        getMediaAlt(
+          image.image,
+          `${eyebrow} project by Travis Wood Builder in Whangārei, image ${index + 1}`,
+        ),
+    }));
 
   return (
     <>

@@ -220,7 +220,7 @@ export function Navbar({ activePath, links, cta, logo, phoneIcon }: NavbarProps)
       </SiteContainer>
 
       {open && (
-        <div id="mobile-menu" className="fixed inset-x-0 top-20 z-50 max-h-[calc(100svh-5rem)] touch-manipulation overflow-y-auto overscroll-contain border-t border-brand-gold/40 bg-black/95 px-5 py-6 pointer-events-auto backdrop-blur-lg lg:hidden">
+        <div id="mobile-menu" className="fixed inset-x-0 top-20 z-50 max-h-[calc(100svh-5rem)] touch-manipulation overflow-y-auto overscroll-contain border-t border-brand-gold/40 bg-brand-navy/95 px-5 py-6 pointer-events-auto backdrop-blur-lg lg:hidden">
           <div className="mx-auto flex max-w-[1440px] flex-col gap-1">
             {links.map((link) => {
               if (link.url === "/services") {
