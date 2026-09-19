@@ -8,24 +8,22 @@ function createGallery(
   filePrefix: string,
   count: number,
   description: string,
-  startNumber = 1,
+  excludedImageNumbers: number[] = [],
 ): GalleryImage[] {
-  return Array.from({ length: count }, (_, index) => {
-    const imageNumber = index + startNumber;
-
-    return {
+  return Array.from({ length: count }, (_, index) => index + 1)
+    .filter((imageNumber) => !excludedImageNumbers.includes(imageNumber))
+    .map((imageNumber) => ({
       src: `/images/galleries/${directory}/${filePrefix}-${String(imageNumber).padStart(2, "0")}.jpg`,
       alt: `${description}, image ${imageNumber}`,
-    };
-  });
+    }));
 }
 
 export const homeGalleryImages = createGallery(
   "home",
   "home",
-  19,
+  20,
   "Residential building project by Travis Wood Builder in Whangārei",
-  2,
+  [5],
 );
 
 export const serviceGalleryImagesByAnchor: Record<string, GalleryImage[]> = {
@@ -44,8 +42,8 @@ export const serviceGalleryImagesByAnchor: Record<string, GalleryImage[]> = {
   "outdoor-living": createGallery(
     "outdoor-living",
     "outdoor-living",
-    13,
+    14,
     "Outdoor living project by Travis Wood Builder in Whangārei",
-    2,
+    [5],
   ),
 };
