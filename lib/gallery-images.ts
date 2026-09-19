@@ -44,6 +44,6 @@ export const serviceGalleryImagesByAnchor: Record<string, GalleryImage[]> = {
     "outdoor-living",
     14,
     "Outdoor living project by Travis Wood Builder in Whangārei",
-    [5],
+    [5, 13],
   ),
 };
