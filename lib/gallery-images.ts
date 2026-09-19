@@ -8,9 +8,10 @@ function createGallery(
   filePrefix: string,
   count: number,
   description: string,
+  startNumber = 1,
 ): GalleryImage[] {
   return Array.from({ length: count }, (_, index) => {
-    const imageNumber = index + 1;
+    const imageNumber = index + startNumber;
 
     return {
       src: `/images/galleries/${directory}/${filePrefix}-${String(imageNumber).padStart(2, "0")}.jpg`,
@@ -22,8 +23,9 @@ function createGallery(
 export const homeGalleryImages = createGallery(
   "home",
   "home",
-  20,
+  19,
   "Residential building project by Travis Wood Builder in Whangārei",
+  2,
 );
 
 export const serviceGalleryImagesByAnchor: Record<string, GalleryImage[]> = {
@@ -42,7 +44,8 @@ export const serviceGalleryImagesByAnchor: Record<string, GalleryImage[]> = {
   "outdoor-living": createGallery(
     "outdoor-living",
     "outdoor-living",
-    14,
+    13,
     "Outdoor living project by Travis Wood Builder in Whangārei",
+    2,
   ),
 };
