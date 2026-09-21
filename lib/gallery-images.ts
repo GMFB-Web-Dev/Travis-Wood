@@ -23,7 +23,7 @@ export const homeGalleryImages = createGallery(
   "home",
   20,
   "Residential building project by Travis Wood Builder in Whangārei",
-  [5],
+  [3, 5],
 );
 
 export const serviceGalleryImagesByAnchor: Record<string, GalleryImage[]> = {
