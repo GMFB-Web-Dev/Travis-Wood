@@ -33,7 +33,6 @@ The remaining variables are server-only and must not use a `NEXT_PUBLIC_` prefix
 - `REVALIDATION_SECRET`: a random value of at least 32 characters, shared only with the Payload server hook
 - `RESEND_API_KEY`: the server-only Resend API key used to deliver contact form enquiries
 - `CONTACT_EMAIL`: the fixed server-side inbox that receives contact form enquiries
-- `RESEND_FROM_EMAIL`: `onboarding@resend.dev` for initial testing, then a sender on your verified domain such as `Website Enquiries <forms@yourdomain.com>`
 
 Redeploy after adding or rotating environment variables. Configure the Payload deployment with the same `REVALIDATION_SECRET` and set `FRONTEND_REVALIDATION_URL=https://gmfb-travis-wood-builder.vercel.app/api/revalidate/payload`. Never create `NEXT_PUBLIC_REVALIDATION_SECRET` or `NEXT_PUBLIC_RESEND_API_KEY`.
 

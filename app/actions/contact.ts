@@ -15,6 +15,8 @@ const SUCCESS_MESSAGE =
   "Thanks. Your enquiry has been sent. We’ll be in touch soon.";
 const RATE_LIMIT_MESSAGE =
   "Too many enquiries have been submitted. Please wait a few minutes and try again.";
+const CONTACT_FORM_SENDER =
+  "Travis Wood Builders <forms@weblaunch.co.nz>";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1_000;
@@ -167,17 +169,15 @@ export async function submitContactForm(
 
   const apiKey = process.env.RESEND_API_KEY?.trim();
   const recipient = process.env.CONTACT_EMAIL?.trim();
-  const sender = process.env.RESEND_FROM_EMAIL?.trim();
 
   if (
     !apiKey ||
     !recipient ||
     !EMAIL_PATTERN.test(recipient) ||
-    recipient.length > 254 ||
-    !sender
+    recipient.length > 254
   ) {
     console.error(
-      "Contact form is missing valid RESEND_API_KEY, CONTACT_EMAIL, or RESEND_FROM_EMAIL configuration.",
+      "Contact form is missing valid RESEND_API_KEY or CONTACT_EMAIL configuration.",
     );
     return { status: "error", message: GENERIC_ERROR_MESSAGE };
   }
@@ -199,7 +199,7 @@ export async function submitContactForm(
     const phoneDisplay = phone || "Not provided";
 
     const { error } = await resend.emails.send({
-      from: sender,
+      from: CONTACT_FORM_SENDER,
       to: recipient,
       replyTo: email,
       subject: "New website enquiry",
