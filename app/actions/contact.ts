@@ -2,6 +2,7 @@
 
 import { Resend } from "resend";
 import { headers } from "next/headers";
+import { renderContactEnquiryEmail } from "@/emails/contact-enquiry";
 import { getSiteSettings } from "@/lib/payload/client";
 
 export type ContactFormState = {
@@ -196,26 +197,22 @@ export async function submitContactForm(
     }
 
     const resend = new Resend(apiKey);
-    const phoneDisplay = phone || "Not provided";
+    const emailContent = renderContactEnquiryEmail({
+      firstName,
+      lastName,
+      email,
+      phone,
+      service,
+      message,
+    });
 
     const { error } = await resend.emails.send({
       from: CONTACT_FORM_SENDER,
       to: recipient,
       replyTo: email,
       subject: "New website enquiry",
-      text: [
-        "New website enquiry",
-        "",
-        `First name: ${firstName}`,
-        `Last name: ${lastName}`,
-        `Email: ${email}`,
-        `Phone: ${phoneDisplay}`,
-        `Service: ${service}`,
-        "Agreement: Accepted",
-        "",
-        "Message:",
-        message,
-      ].join("\n"),
+      html: emailContent.html,
+      text: emailContent.text,
     });
 
     if (error) {
