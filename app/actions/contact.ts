@@ -3,7 +3,6 @@
 import { Resend } from "resend";
 import { headers } from "next/headers";
 import { getSiteSettings } from "@/lib/payload/client";
-import { verifyTurnstileToken } from "@/lib/turnstile/verify";
 
 export type ContactFormState = {
   status: "idle" | "success" | "error";
@@ -14,36 +13,115 @@ const GENERIC_ERROR_MESSAGE =
   "We couldn’t send your enquiry. Please try again or contact us by phone or email.";
 const SUCCESS_MESSAGE =
   "Thanks. Your enquiry has been sent. We’ll be in touch soon.";
-const TURNSTILE_ERROR_MESSAGE =
-  "Please complete the security check and try again.";
+const RATE_LIMIT_MESSAGE =
+  "Too many enquiries have been submitted. Please wait a few minutes and try again.";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1_000;
+const RATE_LIMIT_MAX_REQUESTS = 5;
+const RATE_LIMIT_MAX_CLIENTS = 10_000;
+
+type HeaderReader = {
+  get(name: string): string | null;
+};
+
+type RateLimitEntry = {
+  count: number;
+  resetAt: number;
+};
+
+const globalRateLimit = globalThis as typeof globalThis & {
+  contactFormRateLimits?: Map<string, RateLimitEntry>;
+};
+
+const contactFormRateLimits =
+  globalRateLimit.contactFormRateLimits ?? new Map<string, RateLimitEntry>();
+
+globalRateLimit.contactFormRateLimits = contactFormRateLimits;
 
 function getField(formData: FormData, name: string) {
   const value = formData.get(name);
   return typeof value === "string" ? value.trim() : "";
 }
 
+function getFirstHeaderValue(value: string | null) {
+  return value?.split(",")[0]?.trim() || null;
+}
+
+function isSameOriginRequest(requestHeaders: HeaderReader) {
+  const origin = requestHeaders.get("origin");
+  const requestHost =
+    getFirstHeaderValue(requestHeaders.get("x-forwarded-host")) ??
+    getFirstHeaderValue(requestHeaders.get("host"));
+
+  if (!origin || !requestHost) return false;
+
+  try {
+    const originUrl = new URL(origin);
+    const forwardedProtocol = getFirstHeaderValue(
+      requestHeaders.get("x-forwarded-proto"),
+    );
+
+    if (originUrl.protocol !== "http:" && originUrl.protocol !== "https:") {
+      return false;
+    }
+
+    if (originUrl.host.toLowerCase() !== requestHost.toLowerCase()) {
+      return false;
+    }
+
+    return (
+      !forwardedProtocol ||
+      `${forwardedProtocol.toLowerCase()}:` === originUrl.protocol
+    );
+  } catch {
+    return false;
+  }
+}
+
+function getClientIp(requestHeaders: HeaderReader) {
+  return (
+    getFirstHeaderValue(requestHeaders.get("x-forwarded-for")) ??
+    getFirstHeaderValue(requestHeaders.get("x-real-ip")) ??
+    "unknown"
+  );
+}
+
+function isRateLimited(clientIp: string, now = Date.now()) {
+  const existing = contactFormRateLimits.get(clientIp);
+
+  if (!existing || existing.resetAt <= now) {
+    if (contactFormRateLimits.size >= RATE_LIMIT_MAX_CLIENTS) {
+      for (const [storedIp, entry] of contactFormRateLimits) {
+        if (entry.resetAt <= now) contactFormRateLimits.delete(storedIp);
+      }
+
+      if (contactFormRateLimits.size >= RATE_LIMIT_MAX_CLIENTS) return true;
+    }
+
+    contactFormRateLimits.set(clientIp, {
+      count: 1,
+      resetAt: now + RATE_LIMIT_WINDOW_MS,
+    });
+    return false;
+  }
+
+  if (existing.count >= RATE_LIMIT_MAX_REQUESTS) return true;
+
+  existing.count += 1;
+  return false;
+}
+
 export async function submitContactForm(
   _previousState: ContactFormState,
   formData: FormData,
 ): Promise<ContactFormState> {
-  const turnstileToken = getField(formData, "turnstileToken");
   const requestHeaders = await headers();
-  const remoteIp = requestHeaders
-    .get("x-forwarded-for")
-    ?.split(",")[0]
-    ?.trim();
-  const isHuman = await verifyTurnstileToken({
-    token: turnstileToken,
-    remoteIp,
-  });
 
-  if (!isHuman) {
-    return {
-      status: "error",
-      message: TURNSTILE_ERROR_MESSAGE,
-    };
+  // Next.js also performs this Origin-to-Host CSRF check for Server Actions.
+  // Requiring it here keeps this email action closed to same-site requests.
+  if (!isSameOriginRequest(requestHeaders)) {
+    return { status: "error", message: GENERIC_ERROR_MESSAGE };
   }
 
   const firstName = getField(formData, "firstName");
@@ -61,6 +139,10 @@ export async function submitContactForm(
       status: "success",
       message: SUCCESS_MESSAGE,
     };
+  }
+
+  if (isRateLimited(getClientIp(requestHeaders))) {
+    return { status: "error", message: RATE_LIMIT_MESSAGE };
   }
 
   if (

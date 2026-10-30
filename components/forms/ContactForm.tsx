@@ -1,15 +1,11 @@
 "use client";
 
-import { useActionState, useEffect, useRef, useState } from "react";
+import { useActionState, useEffect, useRef } from "react";
 import {
   submitContactForm,
   type ContactFormState,
 } from "@/app/actions/contact";
 import { ActionButton } from "@/components/ui/Button";
-import {
-  TurnstileWidget,
-  type TurnstileWidgetHandle,
-} from "@/components/forms/TurnstileWidget";
 import type { ContactFormSettings } from "@/lib/payload/types";
 
 type FieldProps = {
@@ -69,17 +65,11 @@ export function ContactForm({
     initialState,
   );
   const formRef = useRef<HTMLFormElement>(null);
-  const turnstileRef = useRef<TurnstileWidgetHandle>(null);
-  const [turnstileVerified, setTurnstileVerified] = useState(false);
   const surfaceClassName = surface === "navy" ? "bg-brand-navy" : "bg-black";
 
   useEffect(() => {
     if (state.status === "success") {
       formRef.current?.reset();
-    }
-
-    if (state.status !== "idle") {
-      turnstileRef.current?.reset();
     }
   }, [state]);
 
@@ -118,16 +108,12 @@ export function ContactForm({
         <label htmlFor="website">Website</label>
         <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
       </div>
-      <TurnstileWidget
-        ref={turnstileRef}
-        onVerifiedChange={setTurnstileVerified}
-      />
       <div>
         <ActionButton
           type="submit"
-          disabled={pending || !turnstileVerified}
+          disabled={pending}
           aria-describedby="contact-form-status"
-          className={`px-[34px] disabled:opacity-60 ${pending ? "pointer-events-none cursor-wait" : !turnstileVerified ? "cursor-not-allowed" : ""}`}
+          className={`px-[34px] disabled:opacity-60 ${pending ? "pointer-events-none cursor-wait" : ""}`}
         >
           {pending ? "Sending…" : settings.submitLabel}
         </ActionButton>

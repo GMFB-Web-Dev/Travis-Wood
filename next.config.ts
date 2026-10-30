@@ -2,6 +2,12 @@ import type { NextConfig } from "next";
 import { isProductionDeployment } from "./lib/seo/config";
 
 const nextConfig: NextConfig = {
+  experimental: {
+    // Same-origin is the default. Do not add allowedOrigins for this form.
+    serverActions: {
+      bodySizeLimit: "32kb",
+    },
+  },
   async headers() {
     if (isProductionDeployment()) return [];
 
