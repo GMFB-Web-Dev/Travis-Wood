@@ -1,4 +1,4 @@
-const FALLBACK_SITE_URL = "https://gmfb-travis-wood-builder.vercel.app";
+const FALLBACK_SITE_URL = "https://www.traviswoodbuilder.co.nz";
 
 function resolveSiteUrl() {
   const configuredUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();

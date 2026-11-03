@@ -27,7 +27,7 @@ REVALIDATION_SECRET=the-same-long-random-secret-used-by-payload
 Set these server-only variables in the Payload deployment:
 
 ```dotenv
-FRONTEND_REVALIDATION_URL=https://gmfb-travis-wood-builder.vercel.app/api/revalidate/payload
+FRONTEND_REVALIDATION_URL=https://www.traviswoodbuilder.co.nz/api/revalidate/payload
 REVALIDATION_SECRET=the-same-long-random-secret-used-by-the-frontend
 ```
 

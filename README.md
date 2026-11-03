@@ -24,7 +24,7 @@ Published content is cached for one hour and can be invalidated by the protected
 
 Add these variables in Vercel. Redeploy after changing them.
 
-- `NEXT_PUBLIC_SITE_URL`: `https://gmfb-travis-wood-builder.vercel.app` (Production, Preview, and Development so every deployment emits the production canonical origin)
+- `NEXT_PUBLIC_SITE_URL`: `https://www.traviswoodbuilder.co.nz` (Production, Preview, and Development so every deployment emits the production canonical origin)
 
 The remaining variables are server-only and must not use a `NEXT_PUBLIC_` prefix:
 
@@ -34,7 +34,7 @@ The remaining variables are server-only and must not use a `NEXT_PUBLIC_` prefix
 - `RESEND_API_KEY`: the server-only Resend API key used to deliver contact form enquiries
 - `CONTACT_EMAIL`: the fixed server-side inbox that receives contact form enquiries
 
-Redeploy after adding or rotating environment variables. Configure the Payload deployment with the same `REVALIDATION_SECRET` and set `FRONTEND_REVALIDATION_URL=https://gmfb-travis-wood-builder.vercel.app/api/revalidate/payload`. Never create `NEXT_PUBLIC_REVALIDATION_SECRET` or `NEXT_PUBLIC_RESEND_API_KEY`.
+Redeploy after adding or rotating environment variables. Configure the Payload deployment with the same `REVALIDATION_SECRET` and set `FRONTEND_REVALIDATION_URL=https://www.traviswoodbuilder.co.nz/api/revalidate/payload`. Never create `NEXT_PUBLIC_REVALIDATION_SECRET` or `NEXT_PUBLIC_RESEND_API_KEY`.
 
 ## Payload hook installation
 
