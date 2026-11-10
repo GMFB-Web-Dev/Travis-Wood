@@ -9,11 +9,9 @@ import {
   absoluteUrl,
   type PublicPageSlug,
 } from "@/lib/seo/config";
-import { getMedia, getMediaUrl, getPage, getSiteSettings } from "./client";
+import { getMedia, getMediaUrl, getPage } from "./client";
 
 export async function getSiteMetadata(): Promise<Metadata> {
-  const settings = await getSiteSettings();
-  const favicon = getMediaUrl(settings.favicon);
   const allowIndexing = isProductionDeployment();
 
   return {
@@ -51,7 +49,15 @@ export async function getSiteMetadata(): Promise<Metadata> {
         "max-video-preview": allowIndexing ? -1 : 0,
       },
     },
-    icons: favicon ? { icon: [{ url: favicon }] } : undefined,
+    icons: {
+      icon: [
+        {
+          url: "/favicon.png",
+          type: "image/png",
+          sizes: "1000x1000",
+        },
+      ],
+    },
   };
 }
 

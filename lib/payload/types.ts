@@ -200,7 +200,6 @@ export type SiteSettings = {
   businessName: string;
   sourceHash?: string | null;
   logo: MediaRelation;
-  favicon: MediaRelation;
   uiAssets: Array<{
     key: string;
     asset: MediaRelation;

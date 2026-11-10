@@ -222,7 +222,6 @@ export function isSiteSettings(value: unknown): value is SiteSettings {
     isId(value.id) &&
     isString(value.businessName) &&
     isMediaRelation(value.logo) &&
-    isMediaRelation(value.favicon) &&
     isArrayOf(
       value.uiAssets,
       (item): item is SiteSettings["uiAssets"][number] =>
