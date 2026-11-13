@@ -4,6 +4,7 @@ import { Resend } from "resend";
 import { headers } from "next/headers";
 import { renderContactEnquiryEmail } from "@/emails/contact-enquiry";
 import { getSiteSettings } from "@/lib/payload/client";
+import { verifyTurnstileToken } from "@/lib/turnstile/verify";
 
 export type ContactFormState = {
   status: "idle" | "success" | "error";
@@ -16,6 +17,8 @@ const SUCCESS_MESSAGE =
   "Thanks. Your enquiry has been sent. We’ll be in touch soon.";
 const RATE_LIMIT_MESSAGE =
   "Too many enquiries have been submitted. Please wait a few minutes and try again.";
+const TURNSTILE_ERROR_MESSAGE =
+  "Please complete the security check and try again.";
 const CONTACT_FORM_SENDER =
   "Travis Wood Builders <forms@weblaunch.co.nz>";
 
@@ -135,6 +138,7 @@ export async function submitContactForm(
   const message = getField(formData, "message");
   const agreement = getField(formData, "agreement");
   const website = getField(formData, "website");
+  const turnstileToken = getField(formData, "cf-turnstile-response");
 
   // Silently accept likely bot submissions without sending an email.
   if (website) {
@@ -144,7 +148,9 @@ export async function submitContactForm(
     };
   }
 
-  if (isRateLimited(getClientIp(requestHeaders))) {
+  const clientIp = getClientIp(requestHeaders);
+
+  if (isRateLimited(clientIp)) {
     return { status: "error", message: RATE_LIMIT_MESSAGE };
   }
 
@@ -166,6 +172,15 @@ export async function submitContactForm(
       status: "error",
       message: "Please complete all required fields with valid details.",
     };
+  }
+
+  const isHuman = await verifyTurnstileToken({
+    token: turnstileToken,
+    remoteIp: clientIp === "unknown" ? undefined : clientIp,
+  });
+
+  if (!isHuman) {
+    return { status: "error", message: TURNSTILE_ERROR_MESSAGE };
   }
 
   const apiKey = process.env.RESEND_API_KEY?.trim();

@@ -33,8 +33,10 @@ The remaining variables are server-only and must not use a `NEXT_PUBLIC_` prefix
 - `REVALIDATION_SECRET`: a random value of at least 32 characters, shared only with the Payload server hook
 - `RESEND_API_KEY`: the server-only Resend API key used to deliver contact form enquiries
 - `CONTACT_EMAIL`: the fixed server-side inbox that receives contact form enquiries
+- `TURNSTILE_SECRET`: the secret for Turnstile widget `0x4AAAAAAF_bRNSVLQYJt4lj`
+- `TURNSTILE_HOSTNAMES`: a comma-separated allowlist of frontend hostnames returned by Turnstile; use `www.traviswoodbuilder.co.nz` in Production
 
-Redeploy after adding or rotating environment variables. Configure the Payload deployment with the same `REVALIDATION_SECRET` and set `FRONTEND_REVALIDATION_URL=https://www.traviswoodbuilder.co.nz/api/revalidate/payload`. Never create `NEXT_PUBLIC_REVALIDATION_SECRET` or `NEXT_PUBLIC_RESEND_API_KEY`.
+The Turnstile site key is public and committed in `lib/turnstile/config.ts`; do not add it as a Vercel secret. Redeploy after adding or rotating environment variables. Configure the Payload deployment with the same `REVALIDATION_SECRET` and set `FRONTEND_REVALIDATION_URL=https://www.traviswoodbuilder.co.nz/api/revalidate/payload`. Never create `NEXT_PUBLIC_REVALIDATION_SECRET`, `NEXT_PUBLIC_RESEND_API_KEY`, or `NEXT_PUBLIC_TURNSTILE_SECRET`.
 
 ## Payload hook installation
 
