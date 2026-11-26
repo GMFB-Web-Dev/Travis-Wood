@@ -42,8 +42,8 @@ export const siteConfig = {
     telephone: "+64 21 221 9834",
     phoneDisplay: "021 221 9834",
     phoneHref: "tel:+64212219834",
-    email: "traviswoodbuild@gmail.com",
-    emailHref: "mailto:traviswoodbuild@gmail.com",
+    email: "traviswoodbuilder@gmail.com",
+    emailHref: "mailto:traviswoodbuilder@gmail.com",
     address: {
       addressLocality: "Whangārei",
       addressRegion: "Northland",
